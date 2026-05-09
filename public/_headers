@@ -25,6 +25,10 @@
 /og-default.svg
   Cache-Control: public, max-age=2592000
 
+# Hero portraits + atmospheric jpgs — 30 day cache. Replace the file to invalidate.
+/images/*
+  Cache-Control: public, max-age=2592000
+
 # Sitemap + robots — short cache so search engines pick up new URLs after each patch.
 /sitemap-index.xml
   Cache-Control: public, max-age=3600
