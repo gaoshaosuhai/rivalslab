@@ -4,12 +4,19 @@
 // Anchor is on the team alongside one or more Secondary heroes. The Anchor
 // typically gets a stat buff; Secondaries gain a new active or passive ability.
 //
-// V1 dataset: 12 verified Team-Ups from agent research (Beebom + Dot Esports +
-// marvelrivals.gg sources, May 2026). S7.5 has 24 active Team-Ups total — the
-// remaining 12 require a verification pass against marvelrivals.gg/team-ups
-// before the next maintenance bump.
+// V2 (2026-05-10): cross-checked against marvelrivals.gg + Beebom + Mobalytics.
+// 25 active Team-Ups in S7.5. Removed 7 historical entries that had been deactivated
+// by NetEase prior to S7.5 (Voltaic Union, Symbiote Bond, Metallic Chaos,
+// Storming Ignition, Ragnarok Rebirth, Lunar Force, Guardian Revival) — they
+// would have shipped stale info on day 1.
+//
+// Sources:
+//   https://marvelrivals.gg/team-ups/
+//   https://rivalsmeta.com/tier-list/team-ups
+//   https://beebom.com/marvel-rivals-team-ups/
+//   https://www.turtlebeach.com/blog/marvel-rivals-season-7-all-team-up-changes
 
-export const LAST_REVIEWED = '2026-05-09';
+export const LAST_REVIEWED = '2026-05-10';
 
 export interface TeamUp {
   /** url-slug. */
@@ -27,11 +34,13 @@ export interface TeamUp {
   tier: 'S' | 'A' | 'B' | 'C';
   /** Season when introduced. */
   introduced: string;
-  /** Best maps for this team-up — references map ids. Optional, populated where known. */
+  /** Best maps for this team-up — references map ids. Heuristic where exact data unavailable. */
   bestMaps?: string[];
 }
 
 export const TEAM_UPS: TeamUp[] = [
+  // ─── Active Team-Ups ─────────────────────────────────────────────────────
+
   {
     id: 'gamma-charge',
     name: 'Gamma Charge',
@@ -42,51 +51,7 @@ export const TEAM_UPS: TeamUp[] = [
       'Doctor Strange and Iron Man both pick up armor when Hulk is in range. Iron Man\'s Unibeam becomes a one-shot threat against squishies. Run on Convoy maps with extended team-fight windows.',
     tier: 'A',
     introduced: 'Launch',
-  },
-  {
-    id: 'voltaic-union',
-    name: 'Voltaic Union',
-    anchor: 'thor',
-    secondaries: ['storm', 'captain-america'],
-    ability: 'Storm and Captain America gain a lightning-empowered melee/throw.',
-    blurb:
-      'Captain America\'s shield throw chains lightning; Storm\'s tornado pulses. The headline anti-dive synergy of S6+ — pulls value on Domination point fights.',
-    tier: 'S',
-    introduced: 'Launch',
-  },
-  {
-    id: 'ragnarok-rebirth',
-    name: 'Ragnarok Rebirth',
-    anchor: 'hela',
-    secondaries: ['loki', 'thor'],
-    ability: 'Death of Loki / Thor triggers a free respawn near Hela.',
-    blurb:
-      'The original "uncrackable backline" team-up. Hela\'s ult plus a respawn-on-death pact has been nerfed multiple times but still warps draft phase whenever it goes through ranked.',
-    tier: 'A',
-    introduced: 'Launch',
-  },
-  {
-    id: 'symbiote-bond',
-    name: 'Symbiote Bond',
-    anchor: 'venom',
-    secondaries: ['spider-man', 'peni-parker'],
-    ability: 'Adds a symbiote shield burst to allies near Venom.',
-    blurb:
-      'Spider-Man + Peni Parker turn into a double-flank with Venom diving from front. The shield burst saves over-extends; pairs hard with Convergence maps.',
-    tier: 'A',
-    introduced: 'Launch',
-    bestMaps: ['symbiotic-surface', 'shin-shibuya'],
-  },
-  {
-    id: 'lunar-force',
-    name: 'Lunar Force',
-    anchor: 'moon-knight',
-    secondaries: ['cloak-and-dagger'],
-    ability: 'Moon Knight + Cloak & Dagger gain a phase-warp ability.',
-    blurb:
-      'Phase-warp ducks ult-windows. Cloak\'s heal output spikes when Moon Knight is mid-rotation — niche but underrated.',
-    tier: 'B',
-    introduced: 'Launch',
+    bestMaps: ['midtown', 'yggdrasill-path'],
   },
   {
     id: 'planet-x-pals',
@@ -98,39 +63,7 @@ export const TEAM_UPS: TeamUp[] = [
       'The lowest-skill-floor backline. Groot wall + Rocket turret on the high ground = free site denial. Jeff\'s heal pulse covers the ult-window vulnerability.',
     tier: 'A',
     introduced: 'Launch',
-  },
-  {
-    id: 'metallic-chaos',
-    name: 'Metallic Chaos',
-    anchor: 'magneto',
-    secondaries: ['scarlet-witch', 'psylocke'],
-    ability: 'Magnetic projectile redirection — Magneto bends ally damage.',
-    blurb:
-      'Magneto\'s shield can rebound Scarlet Witch and Psylocke ranged damage. Shines on Convergence maps where corridors force linear shots.',
-    tier: 'B',
-    introduced: 'Launch',
-  },
-  {
-    id: 'guardian-revival',
-    name: 'Guardian Revival',
-    anchor: 'adam-warlock',
-    secondaries: ['star-lord', 'mantis'],
-    ability: 'Star-Lord and Mantis gain a self-revive cocoon.',
-    blurb:
-      'Self-revive eats one ult per fight if you bait it right. Adam Warlock\'s ult pairs across the trio — high ceiling, requires comms.',
-    tier: 'S',
-    introduced: 'Launch',
-  },
-  {
-    id: 'storming-ignition',
-    name: 'Storming Ignition',
-    anchor: 'storm',
-    secondaries: ['human-torch'],
-    ability: 'Fire-tornado combo — Storm\'s tornado ignites with Torch\'s flames.',
-    blurb:
-      'AOE area-denial that rewards stacked enemy comps. Strong vs slow tanks; weak vs dive.',
-    tier: 'A',
-    introduced: 'S2 (Fantastic Four)',
+    bestMaps: ['spider-islands', 'birnin-tchalla'],
   },
   {
     id: 'arcane-order',
@@ -142,6 +75,7 @@ export const TEAM_UPS: TeamUp[] = [
       'Triple-magic comp that punishes anti-tank stacks. Scarlet Witch and Magik scale together; Strange anchors sustain.',
     tier: 'B',
     introduced: 'Launch',
+    bestMaps: ['heart-of-heaven', 'hall-of-djalia'],
   },
   {
     id: 'bestial-hunt',
@@ -153,6 +87,7 @@ export const TEAM_UPS: TeamUp[] = [
       'Niche but incredible into long-sightline picks (Hawkeye, Hela). Daredevil\'s sense + blind grenade closes those windows.',
     tier: 'B',
     introduced: 'S5',
+    bestMaps: ['museum-of-contemplation', 'central-park'],
   },
   {
     id: 'lucky-loan',
@@ -164,6 +99,250 @@ export const TEAM_UPS: TeamUp[] = [
       'S7.5 headline addition. Reflective shield turns dive comps inside-out — Cap\'s shield throw + Black Cat\'s heal radius is the new anti-Iron-Fist tech.',
     tier: 'S',
     introduced: 'S7.5',
+    bestMaps: ['krakoa', 'shin-shibuya'],
+  },
+
+  // ─── Newly catalogued (post-launch additions confirmed active in S7.5) ───
+
+  {
+    id: 'symbiote-shenanigans',
+    name: 'Symbiote Shenanigans',
+    anchor: 'venom',
+    secondaries: ['jeff-the-land-shark', 'hela'],
+    ability: 'Venom +150 max HP; Jeff and Hela get healing tendrils.',
+    blurb:
+      'Replaced the old Symbiote Bond in S2.5. Venom anchors a sustain backline now — Hela ranged poke + Jeff burst heal funnels through symbiote tendrils. S-tier on close-quarter maps.',
+    tier: 'S',
+    introduced: 'S2.5',
+    bestMaps: ['symbiotic-surface', 'hells-heaven'],
+  },
+  {
+    id: 'chilling-assault',
+    name: 'Chilling Assault',
+    anchor: 'luna-snow',
+    secondaries: ['iron-fist', 'emma-frost'],
+    ability: 'Winter\'s Chill empowers melee with slow + 15% heal boost.',
+    blurb:
+      'Slow-on-hit turns Iron Fist into an unkillable mid-skirmish threat. Emma Frost\'s diamond melee gets a freeze chain that locks tanks.',
+    tier: 'A',
+    introduced: 'S2',
+    bestMaps: ['shin-shibuya', 'hall-of-djalia'],
+  },
+  {
+    id: 'rocket-network',
+    name: 'Rocket Network',
+    anchor: 'rocket-raccoon',
+    secondaries: ['star-lord', 'mister-fantastic'],
+    ability: '"Web Server" beacon revives + 5% heal boost.',
+    blurb:
+      'Drop-and-revive utility for two of the squishiest Duelists. The beacon is a sleeper pick on Convergence maps where Rocket can perch above the contested point.',
+    tier: 'A',
+    introduced: 'S2.5',
+    bestMaps: ['krakoa', 'central-park'],
+  },
+  {
+    id: 'stark-protocol',
+    name: 'Stark Protocol',
+    anchor: 'iron-man',
+    secondaries: ['ultron'],
+    ability: 'Nano-Tech piercing Unibeam — damage AND heal blast.',
+    blurb:
+      'The S2.5 Iron Man + Ultron pair turns the Unibeam into both a damage and heal vector. Hardest mid-range pressure tool in the game on open maps.',
+    tier: 'S',
+    introduced: 'S2.5',
+    bestMaps: ['midtown', 'heart-of-heaven'],
+  },
+  {
+    id: 'cosmic-cyclone',
+    name: 'Cosmic Cyclone',
+    anchor: 'storm',
+    secondaries: ['adam-warlock'],
+    ability: 'Heavenly Harmony trail dealing damage + healing.',
+    blurb:
+      'S7 addition. Storm trails leave behind a heal-and-harm corridor that Adam Warlock can ult-anchor through. Excellent on vertical maps where Storm rules altitude.',
+    tier: 'A',
+    introduced: 'S7',
+    bestMaps: ['yggdrasill-path', 'celestial-husk'],
+  },
+  {
+    id: 'stars-aligned',
+    name: 'Stars Aligned',
+    anchor: 'captain-america',
+    secondaries: ['winter-soldier'],
+    ability: 'Stellar Impact slam shockwave + slow, +100 HP.',
+    blurb:
+      'Cap\'s shield throw triggers a Winter Soldier follow-up slam. The +100 HP keeps Cap alive through the dive window. Solid anti-flank tech.',
+    tier: 'A',
+    introduced: 'S2',
+    bestMaps: ['birnin-tchalla', 'midtown'],
+  },
+  {
+    id: 'blessing-of-the-kumiho',
+    name: 'Blessing of the Kumiho',
+    anchor: 'white-fox',
+    secondaries: ['luna-snow'],
+    ability: 'Spirit Fox Accord — line-skill heal/charm + speed.',
+    blurb:
+      'S7 addition that pairs the two K-pop Strategists. The line-skill is a charm-on-hit that disables enemy ults briefly. Pair with Lucky Loan for the meta sustain stack.',
+    tier: 'S',
+    introduced: 'S7',
+    bestMaps: ['shin-shibuya', 'hall-of-djalia'],
+  },
+  {
+    id: 'fastball-special',
+    name: 'Fastball Special',
+    anchor: 'wolverine',
+    secondaries: ['hulk', 'the-thing'],
+    ability: 'Hulk or Thing launches Wolverine as an armor-piercing missile.',
+    blurb:
+      'The launch-day comic-book combo. Hulk or Thing throws Wolverine across the map for instant backline pressure. Irreplaceable tech vs sniper picks.',
+    tier: 'S',
+    introduced: 'Launch',
+    bestMaps: ['krakoa', 'hells-heaven'],
+  },
+  {
+    id: 'blade-of-khonshu',
+    name: 'Blade of Khonshu',
+    anchor: 'moon-knight',
+    secondaries: ['blade'],
+    ability: 'Moon God\'s Chosen — bonus crescent damage, 5% damage boost.',
+    blurb:
+      'Two of the most flank-heavy Duelists pair into a moon-cycle damage scaling. Great into prolonged 1v1 mirror-skirmish patterns.',
+    tier: 'B',
+    introduced: 'S3.5',
+    bestMaps: ['midtown', 'hall-of-djalia'],
+  },
+  {
+    id: 'deep-wrath',
+    name: 'Deep Wrath',
+    anchor: 'hela',
+    secondaries: ['namor'],
+    ability: 'Death Kneel summons piranhas/zombies, +15% damage.',
+    blurb:
+      'Replaced Ragnarok Rebirth as Hela\'s flagship in S4.5. Death Kneel becomes a sustained area-denial that pairs with Namor\'s turrets for site lockdown.',
+    tier: 'A',
+    introduced: 'S4.5',
+    bestMaps: ['spider-islands', 'birnin-tchalla'],
+  },
+  {
+    id: 'divine-armory',
+    name: 'Divine Armory',
+    anchor: 'angela',
+    secondaries: ['thor'],
+    ability: 'Thunder Spear restores Thorforce, +100 HP.',
+    blurb:
+      'Angela anchors the S4 Asgard pair. Spear-throw refunds Thor\'s ult charge + grants both heroes bonus HP. Run on vertical maps where Angela\'s flight rules.',
+    tier: 'A',
+    introduced: 'S4',
+    bestMaps: ['yggdrasill-path', 'heart-of-heaven'],
+  },
+  {
+    id: 'duality-dance',
+    name: 'Duality Dance',
+    anchor: 'adam-warlock',
+    secondaries: ['luna-snow'],
+    ability: 'Cosmic Awareness — shared revive aura + 15% heal.',
+    blurb:
+      'S6 double-Strategist combo. Both heroes revive within the aura — the highest-ceiling support comp in the game when comms are tight.',
+    tier: 'B',
+    introduced: 'S6',
+    bestMaps: ['hall-of-djalia', 'krakoa'],
+  },
+  {
+    id: 'mr-pools-toy-box',
+    name: "Mr. Pool's Interdimensional Toy Box",
+    anchor: 'deadpool',
+    secondaries: ['jeff-the-land-shark', 'elsa-bloodstone'],
+    ability: 'Cosmic Chaos — random-roll buffs (damage / heal / HP).',
+    blurb:
+      'S6 chaos pick. Deadpool rolls a random buff each round — high-variance but always swings momentum somewhere. Run on objective maps where snowballing matters.',
+    tier: 'B',
+    introduced: 'S6',
+    bestMaps: ['museum-of-contemplation', 'central-park'],
+  },
+  {
+    id: 'explosive-entanglement',
+    name: 'Explosive Entanglement',
+    anchor: 'gambit',
+    secondaries: ['magneto', 'rogue'],
+    ability: 'Ace of Aces — kinetic-card volatile sphere, 5% heal.',
+    blurb:
+      'S5 X-Men trio. Gambit\'s charged cards detonate with Magneto + Rogue assistance — area-denial + chip damage that softens entire enemy comps.',
+    tier: 'A',
+    introduced: 'S5',
+    bestMaps: ['arakko', 'midtown'],
+  },
+  {
+    id: 'first-steps',
+    name: 'First Steps',
+    anchor: 'human-torch',
+    secondaries: ['the-thing'],
+    ability: 'Two-In-One — Thing punts flaming Torch as a projectile.',
+    blurb:
+      'Replaced Storming Ignition as Torch\'s flagship in S5. Thing throws a burning Torch into the enemy backline — chaos AOE that competes with Symbiote Shenanigans for top-flight Convergence pick.',
+    tier: 'B',
+    introduced: 'S5',
+    bestMaps: ['celestial-husk', 'heart-of-heaven'],
+  },
+  {
+    id: 'primal-flame',
+    name: 'Primal Flame',
+    anchor: 'phoenix',
+    secondaries: ['wolverine', 'black-widow'],
+    ability: 'Mind\'s Grace — telekinetic claw/bullet upgrade, +10% damage.',
+    blurb:
+      'Phoenix anchors the S3 hitscan + melee combo. Wolverine\'s claws extend with TK; Black Widow\'s bullets get TK redirect. Niche but devastating into open Convoy maps.',
+    tier: 'A',
+    introduced: 'S3',
+    bestMaps: ['krakoa', 'spider-islands'],
+  },
+  {
+    id: 'sword-of-duality',
+    name: 'Sword of Duality',
+    anchor: 'cloak-and-dagger',
+    secondaries: ['hawkeye', 'psylocke'],
+    ability: 'From Shadow to Light — light/dark stance swap, 15% heal.',
+    blurb:
+      'S5 (expanded S5.5). Stance swap toggles bonus heal vs bonus damage. Hawkeye + Psylocke get scaling-on-stance-shift, making this the highest-ceiling Strategist anchor.',
+    tier: 'S',
+    introduced: 'S5.5',
+    bestMaps: ['hall-of-djalia', 'shin-shibuya'],
+  },
+  {
+    id: 'vibrant-vitality',
+    name: 'Vibrant Vitality',
+    anchor: 'mantis',
+    secondaries: ['loki', 'groot'],
+    ability: 'Heavenly Guardian — shared regen aura, +10% heal.',
+    blurb:
+      'S3.5 sustain pack. Loki\'s clones inherit Mantis pollen heals; Groot wall reinforced. Great floor-tier comp for solo-queue Strategist mains.',
+    tier: 'B',
+    introduced: 'S3.5',
+    bestMaps: ['yggdrasill-path', 'central-park'],
+  },
+  {
+    id: 'parker-power-up',
+    name: 'Parker Power-Up',
+    anchor: 'peni-parker',
+    secondaries: ['spider-man'],
+    ability: 'Spider-Tech — Peni gives Spider-Man webs, +50 HP.',
+    blurb:
+      'S6 Spider-Verse callback after Symbiote Bond was retired. Peni shares web charges with Spider-Man — sustain bump for the dive Duelist.',
+    tier: 'C',
+    introduced: 'S6',
+    bestMaps: ['museum-of-contemplation', 'midtown'],
+  },
+  {
+    id: 'psionic-mayhem',
+    name: 'Psionic Mayhem',
+    anchor: 'invisible-woman',
+    secondaries: ['doctor-strange'],
+    ability: 'Force-field projectile redirect synergy, +50 HP.',
+    blurb:
+      'S6.5 Strategist+Vanguard pair. Invisible Woman\'s force field bends through Strange\'s portal — mid-range projectiles loop back at the source.',
+    tier: 'A',
+    introduced: 'S6.5',
+    bestMaps: ['museum-of-contemplation', 'heart-of-heaven'],
   },
 ];
 

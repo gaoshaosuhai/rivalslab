@@ -1,5 +1,6 @@
 {
-  "name": "game-tracker-template",
+  "name": "rivalslab",
+  "description": "Team-Up explorer + map-aware picks for Marvel Rivals",
   "type": "module",
   "version": "0.1.0",
   "private": true,

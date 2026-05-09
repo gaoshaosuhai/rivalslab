@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { HEROES, ROLES_ORDER, heroesByRole, roleClass } from '@/data/heroes';
+import HeroGlyph from '@/components/HeroGlyph.astro';
 ---
 
 <BaseLayout
@@ -27,15 +28,18 @@ import { HEROES, ROLES_ORDER, heroesByRole, roleClass } from '@/data/heroes';
         </h2>
         <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
           {list.map((h) => (
-            <a href={`/heroes/${h.id}/`} class="card p-4 hover:border-[color:color-mix(in_oklab,var(--accent)_45%,transparent)] transition-colors group">
-              <div class="flex items-center gap-2 mb-2">
-                <span class={`chip ${h.tier === 'S' ? 'chip-warn' : 'chip-accent'}`}>{h.tier}</span>
-                <span class="text-xs text-[color:var(--fg-dim)] uppercase">{h.difficulty}</span>
+            <a href={`/heroes/${h.id}/`} class="card p-4 hover:border-[color:color-mix(in_oklab,var(--accent)_45%,transparent)] transition-colors group flex gap-3">
+              <HeroGlyph hero={h} size={56} />
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-2 mb-1.5">
+                  <span class={`chip ${h.tier === 'S' ? 'chip-warn' : 'chip-accent'}`}>{h.tier}</span>
+                  <span class="text-[10px] text-[color:var(--fg-dim)] uppercase tracking-widest">{h.difficulty}</span>
+                </div>
+                <div class="display text-lg uppercase text-[color:var(--fg)] group-hover:text-[color:var(--accent)] leading-tight">
+                  {h.name}
+                </div>
+                <p class="text-xs text-[color:var(--fg-muted)] mt-1.5 line-clamp-2">{h.blurb}</p>
               </div>
-              <div class="display text-lg uppercase text-[color:var(--fg)] group-hover:text-[color:var(--accent)]">
-                {h.name}
-              </div>
-              <p class="text-xs text-[color:var(--fg-muted)] mt-2 line-clamp-3">{h.blurb}</p>
             </a>
           ))}
         </div>

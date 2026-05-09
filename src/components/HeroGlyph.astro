@@ -1,0 +1,45 @@
+---
+import type { Hero } from '@/data/heroes';
+import { ROLE_TINT } from '@/data/heroes';
+
+interface Props {
+  hero: Hero;
+  /** Pixel size; defaults to 56 for cards, 120 for hero pages. */
+  size?: number;
+  /** Show the tier letter as a corner badge. */
+  showTier?: boolean;
+}
+
+const { hero, size = 56, showTier = false } = Astro.props;
+
+// Initials — first letter of each word, capped to 2 chars.
+const initials = hero.name
+  .split(/[\s-&]+/)
+  .filter(Boolean)
+  .map((w) => w[0]!.toUpperCase())
+  .slice(0, 2)
+  .join('');
+
+const tint = ROLE_TINT[hero.role];
+---
+
+<div
+  class="relative inline-grid place-items-center hex-portrait shrink-0"
+  style={`width: ${size}px; background: color-mix(in oklab, ${tint} 20%, var(--bg-soft)); border: 1px solid color-mix(in oklab, ${tint} 50%, transparent);`}
+  aria-label={`${hero.name} portrait`}
+>
+  <span
+    class="display tracking-tight"
+    style={`font-size: ${Math.round(size * 0.42)}px; color: ${tint}; line-height: 1;`}
+  >
+    {initials}
+  </span>
+  {showTier && (
+    <span
+      class={`absolute -top-1 -right-1 chip ${hero.tier === 'S' ? 'chip-warn' : 'chip-accent'}`}
+      style={`font-size: ${Math.max(9, Math.round(size * 0.18))}px; padding: 1px 5px;`}
+    >
+      {hero.tier}
+    </span>
+  )}
+</div>

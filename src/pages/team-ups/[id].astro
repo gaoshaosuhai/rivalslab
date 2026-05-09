@@ -3,6 +3,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import { TEAM_UPS, type TeamUp } from '@/data/team-ups';
 import { heroById, roleClass } from '@/data/heroes';
 import { mapById } from '@/data/maps';
+import HeroGlyph from '@/components/HeroGlyph.astro';
 
 export async function getStaticPaths() {
   return TEAM_UPS.map((t) => ({ params: { id: t.id }, props: { teamUp: t } }));
@@ -36,19 +37,25 @@ const description = `${teamUp.name} — ${anchor?.name} anchor team-up in Marvel
 
     <div class="mt-8 grid md:grid-cols-3 gap-4">
       {anchor && (
-        <a href={`/heroes/${anchor.id}/`} class="card-panel p-4 hover:border-[color:color-mix(in_oklab,var(--accent)_45%,transparent)] transition-colors">
-          <div class="text-xs uppercase tracking-widest text-[color:var(--accent)] font-semibold">Anchor</div>
-          <div class="display text-2xl uppercase mt-2 text-[color:var(--fg)]">{anchor.name}</div>
-          <div class={`text-sm mt-1 ${roleClass(anchor.role)}`}>{anchor.role}</div>
-          <p class="text-xs text-[color:var(--fg-muted)] mt-2 leading-snug">{anchor.blurb}</p>
+        <a href={`/heroes/${anchor.id}/`} class="card-panel p-4 hover:border-[color:color-mix(in_oklab,var(--accent)_45%,transparent)] transition-colors flex gap-3">
+          <HeroGlyph hero={anchor} size={64} />
+          <div class="min-w-0 flex-1">
+            <div class="text-xs uppercase tracking-widest text-[color:var(--accent)] font-semibold">Anchor</div>
+            <div class="display text-xl uppercase mt-1 text-[color:var(--fg)] leading-tight">{anchor.name}</div>
+            <div class={`text-sm mt-1 ${roleClass(anchor.role)}`}>{anchor.role}</div>
+            <p class="text-xs text-[color:var(--fg-muted)] mt-2 leading-snug line-clamp-2">{anchor.blurb}</p>
+          </div>
         </a>
       )}
       {secondaries.map((h) => h && (
-        <a href={`/heroes/${h.id}/`} class="card p-4 hover:border-[color:color-mix(in_oklab,var(--accent)_45%,transparent)] transition-colors">
-          <div class="text-xs uppercase tracking-widest text-[color:var(--fg-dim)] font-semibold">Secondary</div>
-          <div class="display text-2xl uppercase mt-2 text-[color:var(--fg)]">{h.name}</div>
-          <div class={`text-sm mt-1 ${roleClass(h.role)}`}>{h.role}</div>
-          <p class="text-xs text-[color:var(--fg-muted)] mt-2 leading-snug">{h.blurb}</p>
+        <a href={`/heroes/${h.id}/`} class="card p-4 hover:border-[color:color-mix(in_oklab,var(--accent)_45%,transparent)] transition-colors flex gap-3">
+          <HeroGlyph hero={h} size={64} />
+          <div class="min-w-0 flex-1">
+            <div class="text-xs uppercase tracking-widest text-[color:var(--fg-dim)] font-semibold">Secondary</div>
+            <div class="display text-xl uppercase mt-1 text-[color:var(--fg)] leading-tight">{h.name}</div>
+            <div class={`text-sm mt-1 ${roleClass(h.role)}`}>{h.role}</div>
+            <p class="text-xs text-[color:var(--fg-muted)] mt-2 leading-snug line-clamp-2">{h.blurb}</p>
+          </div>
         </a>
       ))}
     </div>

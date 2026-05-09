@@ -1,143 +1,134 @@
-# game-tracker-template
+# RivalsLab
 
-Plumbing-only starter for solo + AI-assisted game tool sites that earn ad revenue from organic search traffic. Used by the [`launch-game-tracker`](https://github.com/gaoshaosuhai/launch-game-tracker-skill) Claude skill.
+Team-Up explorer + map-aware picks for Marvel Rivals. Built solo + AI for SEO-driven ad revenue.
 
-## What this template is
+## What this is
 
-A **minimal Astro 5 + Tailwind 4 + React 19** scaffold that gives you:
+An independent fan tool for [Marvel Rivals](https://www.marvelrivals.com/) (NetEase + Marvel Games). Core differentiation:
 
-- Build infrastructure (zero-config dev / preview / build / typecheck scripts)
-- SEO basics (sitemap, RSS, OG tags, JSON-LD, robots.txt)
-- AdSense / Plausible feature-flag plumbing
-- Privacy + Terms + 404 page templates
-- LAST_REVIEWED freshness signal pattern (each data file declares its own; footer aggregates)
-- GitHub Actions workflows for auto-deploy + monthly maintenance reminders
-- A single placeholder homepage + neutral palette so the project compiles end-to-end on day one
+- **Team-Up Synergy Explorer** — every active Team-Up as a named, filterable, shareable entity (`/team-ups/lucky-loan/`). Existing trackers ship static tier lists; we treat Team-Ups as first-class.
+- **Map-Aware Hero Picker** — per-map role lean, top heroes, recommended Team-Ups (`/maps/tokyo-2099/`).
+- **Counter Picker with Team-Up overlay** — beats commodified counter sites by naming the Team-Up that breaks the matchup.
+- **Per-hero / per-team-up / per-map SEO pages** — ~100-page surface area on day one.
 
-## What this template is NOT
+Mobile-first because half the audience checks during queue.
 
-By design, this template does **not** ship with:
+## Status
 
-- A specific palette
-- A specific motif / decoration pattern
-- Game-specific tool islands (planners, calculators, pickers)
-- Per-entity dynamic routes
-- Sample data populated for any specific game
-- A "ready-made" site you fork and rename
+- **Phase 1–8:** complete (research, design, scaffold, data layer, pages, legal). 78 pages building cleanly.
+- **Phase 9 (deploy):** awaiting domain + Cloudflare Pages project.
+- **V2:** verify the remaining heroes / team-ups (Season 7.5 has 49 / 24, V1 ships with 41 / 12).
 
-Each new project's **visual identity, tool combination, and content layout must be designed fresh** from the chosen game's research dossier. See the [`launch-game-tracker`](#related) skill for the full doctrine and step-by-step methodology.
+See [`RESEARCH_DOSSIER.md`](./RESEARCH_DOSSIER.md) for the strategic rationale and [`DESIGN.md`](./DESIGN.md) for locked visual / tool decisions.
 
-## Quick start
+## Local dev
 
 ```bash
-# Create a new project from this template
-gh repo create my-tracker --public --template gaoshaosuhai/game-tracker-template --clone
-cd my-tracker
-
-# Install + customize
 npm install
-bin/init.sh  # interactive — fills consts.ts and global.css palette
-
-# Verify
-npm run build  # zero errors expected
-npm run dev    # http://localhost:4321
+npm run dev          # http://localhost:4321
+npm run build        # 78 static pages → dist/
+npm run typecheck    # tsc --noEmit, no output = clean
 ```
+
+## Tech stack
+
+- Astro 5.1 + React 19 + Tailwind v4 (uses `@theme` blocks + `color-mix(in oklab)`)
+- TypeScript with `@/*` path alias
+- `@astrojs/sitemap` + `@astrojs/mdx`
+- Cloudflare Pages target
 
 ## Project layout
 
 ```
 .
-├── astro.config.mjs           # Astro + Tailwind + sitemap + react integrations
-├── tsconfig.json              # @/* path alias + strict mode
-├── package.json
-├── bin/init.sh                # interactive customization script
+├── RESEARCH_DOSSIER.md          # Phase 3 — full strategic dossier
+├── DESIGN.md                    # Phase 4 — locked palette, motif, voice, tools
+├── astro.config.mjs
 ├── public/
-│   ├── favicon.svg            # PLACEHOLDER — replace during DESIGN.md phase
-│   ├── og-default.svg         # PLACEHOLDER — replace during DESIGN.md phase
+│   ├── favicon.svg              # Energy-yellow lightning bolt on Fissure Black
+│   ├── og-default.svg           # 1200×630 branded card
 │   └── robots.txt
 ├── src/
-│   ├── consts.ts              # site identity + game-state snapshot + feature flags
-│   ├── styles/global.css      # PLACEHOLDER palette (neutral grey) — replace during init
-│   ├── layouts/BaseLayout.astro
+│   ├── consts.ts                # site identity + game-state snapshot
+│   ├── styles/global.css        # Energy Yellow palette + half-tone motif + display sans
+│   ├── data/
+│   │   ├── heroes.ts            # 41 heroes (V1; verify remaining for full S7.5 roster)
+│   │   ├── team-ups.ts          # 12 verified Team-Ups (V1 of 24 active)
+│   │   ├── maps.ts              # 14 active competitive maps
+│   │   ├── patches.ts           # MR patch feed + upcoming Season 8
+│   │   └── events.ts            # Path to Doomsday seasonal arc
 │   ├── components/
-│   │   ├── BaseHead.astro     # SEO meta, OG, JSON-LD, AdSense/Plausible loading
-│   │   ├── Header.astro       # nav (TODO: customize NAV_ITEMS for your tools)
-│   │   ├── Footer.astro       # LAST_REVIEWED aggregation + contact + legal links
-│   │   └── AdSlot.astro       # AdSense feature-flagged ad slot
-│   ├── data/                  # data files — populate during BUILD phase
-│   │   ├── patches.ts         # source/target/forecast schema
-│   │   ├── codes.ts           # redemption codes with auto-expire
-│   │   ├── events.ts          # active events with auto-filter
-│   │   └── weekly-tasks.ts    # ROI-ranked routine
+│   │   ├── BaseHead.astro       # SEO + Google Fonts (Anton + Inter)
+│   │   ├── Header.astro         # 5-tool nav + mobile menu
+│   │   ├── Footer.astro         # LAST_REVIEWED aggregation
+│   │   ├── AdSlot.astro         # AdSense feature-flag (off until eligible)
+│   │   └── islands/
+│   │       └── TeamUpExplorer.tsx  # Filterable React island
 │   └── pages/
-│       ├── index.astro        # PLACEHOLDER — replace during DESIGN
-│       ├── about.astro        # template w/ TODO comments
-│       ├── privacy.astro      # AdSense-ready privacy template
-│       ├── terms.astro        # legal terms template
-│       ├── 404.astro
-│       └── rss.xml.ts         # minimal RSS scaffold
+│       ├── index.astro          # Homepage — hero + 4-tool strip + latest patch
+│       ├── team-ups/
+│       │   ├── index.astro      # Headline tool — hosts the React island
+│       │   └── [id].astro       # 12 per-team-up pages (auto-generated)
+│       ├── heroes/
+│       │   ├── index.astro      # Hero directory grouped by role
+│       │   └── [id].astro       # 41 per-hero pages
+│       ├── maps/
+│       │   ├── index.astro      # Map directory grouped by mode
+│       │   └── [id].astro       # 14 per-map pages
+│       ├── counter/index.astro  # Archetype-level counter framework
+│       ├── patches/index.astro  # Reverse-chronological patch feed
+│       ├── tier-list.astro      # Supporting tier list
+│       ├── about.astro          # MR-specific editorial standards
+│       ├── privacy.astro        # AdSense-ready
+│       ├── terms.astro          # MR + NetEase + Marvel Games trademark notice
+│       └── 404.astro
 └── .github/workflows/
-    ├── deploy.yml             # auto-deploy to Cloudflare Pages on push
-    └── maintenance-reminder.yml  # monthly issue with checklist
+    ├── deploy.yml               # Auto-deploy to Cloudflare Pages on push to main
+    └── maintenance-reminder.yml # Monthly LAST_REVIEWED bump checklist
 ```
 
-## Required Cloudflare setup
+## Visual identity
 
-Before `git push` triggers an auto-deploy:
+Sampled from marvelrivals.com landing + Art Vision Vol. 01 GUI devdiary + ranked tier badges:
 
-1. Create a Cloudflare Pages project: `npx wrangler pages project create <name> --production-branch=main`
-2. Set the project name in `.github/workflows/deploy.yml` (replace `TODO-set-project-name`)
-3. Set GitHub Actions secrets:
-   ```bash
-   echo "<account-id>" | gh secret set CLOUDFLARE_ACCOUNT_ID --repo <user>/<repo>
-   printf "%s" "<api-token>" | gh secret set CLOUDFLARE_API_TOKEN --repo <user>/<repo>
-   ```
-   Token created at [dash.cloudflare.com/profile/api-tokens](https://dash.cloudflare.com/profile/api-tokens) using the "Cloudflare Pages — Edit" template.
+- **Palette:** Energy Yellow `#FFD60A` + Fissure Black `#0B0B0F` + Comic-pow Red `#FF3B3B` + Cosmic violet `#7C3AED`
+- **Typography:** Anton (display headlines) + Inter (body). No serifs.
+- **Motif:** Comic half-tone dot pattern + diagonal "kapow" panel cuts. Hexagonal portrait frames restricted to portraits only (NOT background — that was MapleAhead's signature).
 
-## Recommended workflow
+Differentiation audit vs prior projects (MapleAhead, Where Winds Meet) lives in [`DESIGN.md`](./DESIGN.md).
 
-This template assumes you're following the [`launch-game-tracker`](https://github.com/gaoshaosuhai/launch-game-tracker-skill) doctrine. Briefly:
+## Deployment
 
-1. **Phase 1–2: Selection** — Pick a game using the 10 opportunity vectors + revenue scoring rubric.
-2. **Phase 3: Deep research** — Produce a research dossier covering audience, competitors, search keywords, visual identity sampling, tool taxonomy.
-3. **Phase 4: Differentiated design** — Lock palette, motif, typography, voice, tool combination. Run a differentiation audit against any prior projects.
-4. **Phase 5: Scaffold** — `gh repo create --template`, run `bin/init.sh`.
-5. **Phase 6: Data layer** — Populate `src/data/` with real game data.
-6. **Phase 7: Pages + islands** — Build bespoke pages + per-entity dynamic routes.
-7. **Phase 8: Monetization plumbing** — Customize privacy.astro, terms.astro for the project; add real CONTACT_EMAIL.
-8. **Phase 9: Deploy + SEO push** — Cloudflare Pages, sitemap submission, subreddit/Discord cross-links.
+Pre-deploy checklist:
 
-See `CUSTOMIZE.md` in this repo for the deep-dive on Phase 5 specifics.
+- [ ] Register `rivalslab.gg` (or fallback `.com` / `.pro`)
+- [ ] Create Cloudflare Pages project named `rivalslab` (`CF_PROJECT_NAME` in [`deploy.yml`](.github/workflows/deploy.yml))
+- [ ] Cloudflare Email Routing → `hello@rivalslab.gg`
+- [ ] Push to GitHub remote
+- [ ] GitHub Secrets: `CLOUDFLARE_API_TOKEN` (Pages — Edit template) + `CLOUDFLARE_ACCOUNT_ID`
+- [ ] Cloudflare Pages → Custom domains → add the domain
+- [ ] Submit `https://rivalslab.gg/sitemap-index.xml` to Google Search Console + Bing
 
-## Anti-patterns to avoid
+## Monetization roadmap
 
-The skill's doctrine forbids these. The template ships in a state that makes them HARD to do accidentally, but you can still cheat:
+Per the [`launch-game-tracker`](https://github.com/gaoshaosuhai/launch-game-tracker-skill) skill's `REVENUE.md` ladder. Hero shooter audience baseline = $3–6 RPM. Climb:
 
-- ❌ Don't reuse a previous project's palette, motif, or font pairing
-- ❌ Don't auto-include "patch tracker + planner + weekly checklist" if the game doesn't fit the pattern
-- ❌ Don't skip Phase 3 (deep research) just because you're confident
-- ❌ Don't apply for AdSense before > 1k organic visitors / month + > 50 indexed pages
-- ❌ Don't enable ads on a sub-100-page site — Google rejects + delays re-review
+| Stage | Threshold | Action |
+|---|---|---|
+| 0 — Launch | day 0 | Ads disabled. Submit sitemap. Build affiliate buying-guide pages. |
+| 1 — AdSense | 1k MAU | Set `ADSENSE_CLIENT` in `consts.ts`. |
+| 2 — Mediavine Journey | 10k sessions/mo | Switch from AdSense to Mediavine. ~1.5–2× RPM lift. |
+| 3 — Mediavine standard | 50k sessions/mo | Full Mediavine. Pursue direct hardware sponsorships. |
+| 4 — Raptive | 100k pageviews/mo | Migrate to Raptive premium tier. |
 
-See the skill's `SKILL.md` for the full doctrine.
+Affiliate angles: gaming peripherals (Razer, Logitech, Amazon), gift cards, controllers, monitors. Build `/best-mouse-for-marvel-rivals/`-style buying guides at stage 1.
 
-## Customization
+## Maintenance cadence
 
-See [`CUSTOMIZE.md`](./CUSTOMIZE.md) for:
+- Bump `LAST_REVIEWED` in changed data files on every patch
+- Footer surfaces the OLDEST date — if it goes >60 days stale, hiatus banner on homepage
+- New patch → update `patches.ts` + tier deltas in `team-ups.ts` / `heroes.ts` within 48 hours
 
-- How to swap the palette
-- How to add data file schemas
-- How to add per-entity dynamic routes
-- How to plug in interactive React islands
-- How to add `/codes/`, `/events/`, `/reset/` utility pages
-- How to enable AdSense / Plausible
-- How to onboard a custom domain
+## Trademarks
 
-## Related
-
-- [`launch-game-tracker`](https://github.com/gaoshaosuhai/launch-game-tracker-skill) — Claude skill that drives the whole pipeline (selection → research → design → build → deploy → operate)
-- Case studies: `gaoshaosuhai/where-winds-meet-tool-plan`, `gaoshaosuhai/maple-ahead`
-
-## License
-
-MIT for the template scaffolding code itself. Game-related trademarks (when you populate this for a specific game) belong to their respective publishers.
+Marvel Rivals and all hero, ability, and map names are trademarks of NetEase Games and Marvel Games. RivalsLab is an independent fan tool, not affiliated with NetEase or Marvel.

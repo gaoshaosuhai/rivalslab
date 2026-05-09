@@ -58,8 +58,8 @@ export const MAPS: MarvelMap[] = [
     mode: 'Convoy',
     flavor: 'Asgardian root-corridor under the World Tree.',
     favorsRoles: ['Vanguard'],
-    notes: 'Linear brawl map. Voltaic Union dominates here — Thor/Storm/Cap chains feed off the corridor sightlines.',
-    topHeroes: ['thor', 'storm', 'captain-america'],
+    notes: 'Linear brawl map with verticality at segment 2. Divine Armory rules here — Angela + Thor exploit the open ceiling. Cosmic Cyclone\'s heal-and-harm trail also peaks on the corridor.',
+    topHeroes: ['thor', 'angela', 'storm'],
   },
   {
     id: 'museum-of-contemplation',
@@ -116,8 +116,8 @@ export const MAPS: MarvelMap[] = [
     mode: 'Convergence',
     flavor: 'Symbiote homeworld — alien ridges and tar pools.',
     favorsRoles: ['Vanguard'],
-    notes: 'Symbiote Bond runs hot here. Venom + Spider-Man + Peni Parker have over-performed the meta since launch.',
-    topHeroes: ['venom', 'spider-man', 'peni-parker'],
+    notes: 'Symbiote Shenanigans runs hot here — Venom + Jeff + Hela tendril-heal stack has over-performed the meta since S2.5. Parker Power-Up is the secondary tech for dive variants.',
+    topHeroes: ['venom', 'jeff-the-land-shark', 'hela'],
   },
   {
     id: 'heart-of-heaven',
