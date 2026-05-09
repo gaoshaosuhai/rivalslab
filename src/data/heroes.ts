@@ -553,3 +553,15 @@ export function roleClass(role: Role): string {
         ? 'role-strategist'
         : '';
 }
+
+/**
+ * Heroes whose portrait png we couldn't source from marvelrivals.com.
+ * HeroGlyph falls back to display-font initials for these.
+ * Probe + populate over time.
+ */
+const HEROES_MISSING_PORTRAIT = new Set<string>(['iron-fist']);
+
+/** Returns the public path to a hero's portrait png, or null if unavailable. */
+export function heroPortraitUrl(id: string): string | null {
+  return HEROES_MISSING_PORTRAIT.has(id) ? null : `/images/heroes/${id}.png`;
+}

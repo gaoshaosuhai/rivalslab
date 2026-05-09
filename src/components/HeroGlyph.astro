@@ -1,6 +1,6 @@
 ---
 import type { Hero } from '@/data/heroes';
-import { ROLE_TINT } from '@/data/heroes';
+import { ROLE_TINT, heroPortraitUrl } from '@/data/heroes';
 
 interface Props {
   hero: Hero;
@@ -12,7 +12,7 @@ interface Props {
 
 const { hero, size = 56, showTier = false } = Astro.props;
 
-// Initials — first letter of each word, capped to 2 chars.
+// Initials fallback — used when we don't have a portrait png for this hero.
 const initials = hero.name
   .split(/[\s-&]+/)
   .filter(Boolean)
@@ -21,22 +21,36 @@ const initials = hero.name
   .join('');
 
 const tint = ROLE_TINT[hero.role];
+const portrait = heroPortraitUrl(hero.id);
 ---
 
 <div
-  class="relative inline-grid place-items-center hex-portrait shrink-0"
+  class="relative inline-block hex-portrait shrink-0 overflow-hidden"
   style={`width: ${size}px; background: color-mix(in oklab, ${tint} 20%, var(--bg-soft)); border: 1px solid color-mix(in oklab, ${tint} 50%, transparent);`}
   aria-label={`${hero.name} portrait`}
 >
-  <span
-    class="display tracking-tight"
-    style={`font-size: ${Math.round(size * 0.42)}px; color: ${tint}; line-height: 1;`}
-  >
-    {initials}
-  </span>
+  {portrait ? (
+    <img
+      src={portrait}
+      alt={`${hero.name} portrait`}
+      width={size}
+      height={Math.round(size * 1.155)}
+      loading="lazy"
+      decoding="async"
+      class="absolute inset-0 w-full h-full object-cover"
+      style={`object-position: 50% 32%;`}
+    />
+  ) : (
+    <span
+      class="absolute inset-0 grid place-items-center display tracking-tight"
+      style={`font-size: ${Math.round(size * 0.42)}px; color: ${tint}; line-height: 1;`}
+    >
+      {initials}
+    </span>
+  )}
   {showTier && (
     <span
-      class={`absolute -top-1 -right-1 chip ${hero.tier === 'S' ? 'chip-warn' : 'chip-accent'}`}
+      class={`absolute -top-1 -right-1 chip ${hero.tier === 'S' ? 'chip-warn' : 'chip-accent'} z-10`}
       style={`font-size: ${Math.max(9, Math.round(size * 0.18))}px; padding: 1px 5px;`}
     >
       {hero.tier}

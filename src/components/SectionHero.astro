@@ -1,0 +1,71 @@
+---
+interface Props {
+  image: string;
+  alt: string;
+  /** Cropping focus point — controls object-position. */
+  focus?: 'center' | 'top' | 'bottom' | 'left' | 'right';
+  /** Tint applied to the gradient overlay — blends with palette. */
+  tint?: 'panel' | 'accent' | 'cosmic' | 'warn';
+  /** Size — full hero (landing) vs compact (interior pages). */
+  variant?: 'full' | 'compact';
+  /** Wrap in container-wide (default) or container-narrow. */
+  width?: 'wide' | 'narrow';
+}
+
+const { image, alt, focus = 'center', tint = 'panel', variant = 'compact', width = 'wide' } = Astro.props;
+
+const objectPositions: Record<string, string> = {
+  center: '50% 50%',
+  top: '50% 18%',
+  bottom: '50% 82%',
+  left: '20% 50%',
+  right: '80% 50%',
+};
+
+// Fissure Black = #0B0B0F = 11,11,15. Right-side accents tinted by role.
+const tintGradients: Record<string, string> = {
+  panel:
+    'linear-gradient(to right, rgba(11,11,15,0.95) 0%, rgba(11,11,15,0.82) 30%, rgba(11,11,15,0.55) 60%, rgba(11,11,15,0.3) 100%), linear-gradient(to top, rgba(11,11,15,0.6) 0%, transparent 100%)',
+  accent:
+    'linear-gradient(to right, rgba(11,11,15,0.95) 0%, rgba(11,11,15,0.82) 30%, rgba(11,11,15,0.45) 70%, rgba(255,214,10,0.18) 100%), linear-gradient(to top, rgba(11,11,15,0.6) 0%, transparent 100%)',
+  cosmic:
+    'linear-gradient(to right, rgba(11,11,15,0.95) 0%, rgba(11,11,15,0.82) 30%, rgba(11,11,15,0.45) 70%, rgba(124,58,237,0.25) 100%), linear-gradient(to top, rgba(11,11,15,0.6) 0%, transparent 100%)',
+  warn:
+    'linear-gradient(to right, rgba(11,11,15,0.95) 0%, rgba(11,11,15,0.82) 30%, rgba(11,11,15,0.45) 70%, rgba(255,59,59,0.22) 100%), linear-gradient(to top, rgba(11,11,15,0.6) 0%, transparent 100%)',
+};
+
+const heightClass =
+  variant === 'full'
+    ? 'min-h-[78vh] md:min-h-[80vh]'
+    : 'min-h-[36vh] md:min-h-[44vh]';
+
+const containerClass = width === 'narrow' ? 'container-narrow' : 'container-wide';
+---
+
+<section class={`relative ${heightClass} overflow-hidden border-b border-[color:var(--border)]`}>
+  <img
+    src={image}
+    alt={alt}
+    class="absolute inset-0 w-full h-full object-cover"
+    style={`object-position: ${objectPositions[focus]}`}
+    loading="eager"
+    fetchpriority="high"
+    decoding="async"
+  />
+  <div
+    class="absolute inset-0"
+    style={`background: ${tintGradients[tint]};`}
+    aria-hidden="true"
+  />
+  {/* Half-tone dot motif, baked into the hero — connects the section to the site's signature. */}
+  <div
+    class="absolute inset-0 pointer-events-none"
+    aria-hidden="true"
+    style="background-image: radial-gradient(circle at 50% 50%, rgba(255,214,10,0.13) 1.1px, transparent 1.4px); background-size: 18px 18px; opacity: 0.7; mask-image: radial-gradient(ellipse at 30% 0%, black 0%, transparent 70%); -webkit-mask-image: radial-gradient(ellipse at 30% 0%, black 0%, transparent 70%);"
+  />
+  <div class={`relative h-full ${containerClass} flex items-end md:items-center py-14 md:py-20`}>
+    <div class="max-w-3xl">
+      <slot />
+    </div>
+  </div>
+</section>

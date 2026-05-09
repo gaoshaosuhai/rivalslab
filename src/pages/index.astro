@@ -7,6 +7,7 @@ import { MAPS } from '@/data/maps';
 import { latestPatch, UPCOMING } from '@/data/patches';
 import { heroById } from '@/data/heroes';
 import ActiveEvents from '@/components/ActiveEvents.astro';
+import SectionHero from '@/components/SectionHero.astro';
 
 const featuredTeamUps = teamUpsByTier().slice(0, 4);
 const upcoming = UPCOMING[0];
@@ -41,82 +42,87 @@ const s8Days = upcoming ? daysUntilISO(upcoming.windowStart) : 0;
     )
   }
 
-  {/* Hero — Team-Up Explorer is the headline */}
-  <section class="container-wide pt-10 md:pt-16 pb-8">
-    <div class="grid lg:grid-cols-[1.4fr_1fr] gap-8 items-center">
+  {/* Hero — full key art behind H1 + CTAs */}
+  <SectionHero
+    image="/images/key-art-hero.jpg"
+    alt="Marvel Rivals key art — heroes leaping into action"
+    focus="center"
+    tint="accent"
+    variant="full"
+  >
+    <span class="chip chip-cosmic">Headline tool</span>
+    <h1 class="display text-5xl md:text-7xl uppercase mt-4 leading-[0.9] tracking-tight [text-shadow:0_2px_25px_rgba(0,0,0,0.55)]">
+      Team-Up <span class="text-[color:var(--accent)]">Explorer.</span><br/>
+      Map-aware <span class="text-[color:var(--accent)]">picks.</span>
+    </h1>
+    <p class="mt-5 text-lg text-[color:var(--fg)] leading-relaxed max-w-xl [text-shadow:0_1px_15px_rgba(0,0,0,0.6)]">
+      Built for Marvel Rivals — patch-aware, mobile-first, queue-tested. Discover the team-ups that win matches and the heroes that win maps.
+    </p>
+    <div class="mt-7 flex flex-wrap gap-3">
+      <a
+        href="/team-ups/"
+        class="inline-flex items-center gap-2 px-5 py-3 rounded-md bg-[color:var(--accent)] text-[color:var(--color-panel-900)] font-semibold hover:bg-[color:var(--accent-soft)] transition-colors"
+      >
+        Explore Team-Ups
+        <span class="display text-lg leading-none">→</span>
+      </a>
+      <a
+        href="/maps/"
+        class="inline-flex items-center gap-2 px-5 py-3 rounded-md border border-[color:var(--accent)] text-[color:var(--fg)] hover:bg-[color:color-mix(in_oklab,var(--accent)_18%,transparent)] transition-colors backdrop-blur-sm"
+      >
+        Map picks
+      </a>
+    </div>
+
+    <div class="mt-8 flex flex-wrap gap-6 text-sm">
       <div>
-        <span class="chip chip-cosmic">Headline tool</span>
-        <h1 class="display text-5xl md:text-7xl uppercase mt-4 leading-[0.9] tracking-tight">
-          Team-Up <span class="text-[color:var(--accent)]">Explorer.</span><br/>
-          Map-aware <span class="text-[color:var(--accent)]">picks.</span>
-        </h1>
-        <p class="mt-5 text-lg text-[color:var(--fg-muted)] leading-relaxed max-w-xl">
-          Built for Marvel Rivals — patch-aware, mobile-first, queue-tested. Discover the team-ups that win matches and the heroes that win maps.
-        </p>
-        <div class="mt-7 flex flex-wrap gap-3">
-          <a
-            href="/team-ups/"
-            class="inline-flex items-center gap-2 px-5 py-3 rounded-md bg-[color:var(--accent)] text-[color:var(--color-panel-900)] font-semibold hover:bg-[color:var(--accent-soft)] transition-colors"
-          >
-            Explore Team-Ups
-            <span class="display text-lg leading-none">→</span>
-          </a>
-          <a
-            href="/maps/"
-            class="inline-flex items-center gap-2 px-5 py-3 rounded-md border border-[color:var(--border)] text-[color:var(--fg)] hover:border-[color:color-mix(in_oklab,var(--accent)_60%,transparent)] transition-colors"
-          >
-            Map picks
-          </a>
-        </div>
-
-        <div class="mt-8 flex flex-wrap gap-6 text-sm text-[color:var(--fg-muted)]">
-          <div>
-            <div class="stat-num text-3xl text-[color:var(--fg)]">{heroCount}</div>
-            <div class="text-xs uppercase tracking-widest text-[color:var(--fg-dim)] mt-1">Heroes</div>
-          </div>
-          <div>
-            <div class="stat-num text-3xl text-[color:var(--fg)]">{teamUpCount}</div>
-            <div class="text-xs uppercase tracking-widest text-[color:var(--fg-dim)] mt-1">Team-Ups</div>
-          </div>
-          <div>
-            <div class="stat-num text-3xl text-[color:var(--fg)]">{mapCount}</div>
-            <div class="text-xs uppercase tracking-widest text-[color:var(--fg-dim)] mt-1">Active Maps</div>
-          </div>
-        </div>
+        <div class="stat-num text-3xl text-[color:var(--accent)]">{heroCount}</div>
+        <div class="text-xs uppercase tracking-widest text-[color:var(--fg-muted)] mt-1">Heroes</div>
       </div>
-
-      {/* Featured team-up card stack */}
-      <div class="space-y-3">
-        <div class="text-xs uppercase tracking-widest text-[color:var(--fg-dim)] font-semibold">
-          Top-tier team-ups · S7.5
-        </div>
-        {
-          featuredTeamUps.map((tu) => {
-            const anchor = heroById(tu.anchor);
-            return (
-              <a
-                href={`/team-ups/${tu.id}/`}
-                class="card-panel block p-4 hover:border-[color:color-mix(in_oklab,var(--accent)_45%,transparent)] transition-colors"
-              >
-                <div class="flex items-start gap-3">
-                  <span class={`chip ${tu.tier === 'S' ? 'chip-warn' : 'chip-accent'}`}>{tu.tier}</span>
-                  <div class="flex-1 min-w-0">
-                    <div class="display text-xl uppercase tracking-tight text-[color:var(--fg)]">
-                      {tu.name}
-                    </div>
-                    <div class="text-xs text-[color:var(--fg-dim)] mt-1">
-                      {anchor?.name ?? tu.anchor} <span class="text-[color:var(--fg-muted)]">+ {tu.secondaries.length} {tu.secondaries.length === 1 ? 'hero' : 'heroes'}</span>
-                    </div>
-                    <p class="text-sm text-[color:var(--fg-muted)] mt-2 leading-snug line-clamp-2">
-                      {tu.ability}
-                    </p>
-                  </div>
-                </div>
-              </a>
-            );
-          })
-        }
+      <div>
+        <div class="stat-num text-3xl text-[color:var(--accent)]">{teamUpCount}</div>
+        <div class="text-xs uppercase tracking-widest text-[color:var(--fg-muted)] mt-1">Team-Ups</div>
       </div>
+      <div>
+        <div class="stat-num text-3xl text-[color:var(--accent)]">{mapCount}</div>
+        <div class="text-xs uppercase tracking-widest text-[color:var(--fg-muted)] mt-1">Active Maps</div>
+      </div>
+    </div>
+  </SectionHero>
+
+  {/* Featured team-ups — moved out of hero into its own row below */}
+  <section class="container-wide pt-10 pb-6">
+    <div class="flex items-end justify-between mb-5">
+      <h2 class="display text-2xl md:text-3xl uppercase tracking-tight">Top-tier team-ups · S7.5</h2>
+      <a href="/team-ups/" class="text-sm text-[color:var(--accent)] hover:text-[color:var(--accent-soft)]">All Team-Ups →</a>
+    </div>
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-3">
+      {
+        featuredTeamUps.map((tu) => {
+          const anchor = heroById(tu.anchor);
+          return (
+            <a
+              href={`/team-ups/${tu.id}/`}
+              class="card-panel block p-4 hover:border-[color:color-mix(in_oklab,var(--accent)_45%,transparent)] transition-colors"
+            >
+              <div class="flex items-start gap-2 mb-2">
+                <span class={`chip ${tu.tier === 'S' ? 'chip-warn' : 'chip-accent'}`}>{tu.tier}</span>
+                <span class="text-xs text-[color:var(--fg-dim)] uppercase tracking-widest">{tu.introduced}</span>
+              </div>
+              <div class="display text-xl uppercase tracking-tight text-[color:var(--fg)]">
+                {tu.name}
+              </div>
+              <div class="text-xs text-[color:var(--fg-dim)] mt-1">
+                <span class="text-[color:var(--accent)]">{anchor?.name ?? tu.anchor}</span>
+                <span class="text-[color:var(--fg-muted)]"> + {tu.secondaries.length}</span>
+              </div>
+              <p class="text-sm text-[color:var(--fg-muted)] mt-2 leading-snug line-clamp-2">
+                {tu.ability}
+              </p>
+            </a>
+          );
+        })
+      }
     </div>
   </section>
 
