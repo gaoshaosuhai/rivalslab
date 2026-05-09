@@ -99,15 +99,87 @@ Differentiation audit vs prior projects (MapleAhead, Where Winds Meet) lives in 
 
 ## Deployment
 
-Pre-deploy checklist:
+Two paths — pick one. Path B is simpler and what Where Winds Meet uses; Path A gives you control if CI lint/test gates need to run before deploy.
+
+### Path A — GitHub Actions deploy (current default)
+
+Repo ships with [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) configured to run `npm ci && npm run build && wrangler pages deploy dist` on every push to `main`.
+
+```bash
+# 1. Push the repo
+gh repo create <user>/rivalslab --public --source=. --remote=origin --push
+
+# 2. Create Cloudflare Pages project (do this BEFORE first push or it'll 404)
+npx wrangler pages project create rivalslab --production-branch=main
+
+# 3. Generate Cloudflare API token (browser):
+#    dash.cloudflare.com/profile/api-tokens → Create Token → "Cloudflare Pages — Edit" template
+
+# 4. Find your Cloudflare account ID at the top of any zone in the dashboard sidebar
+#    (or run `npx wrangler whoami`)
+
+# 5. Push the secrets to GitHub
+echo "<account-id>" | gh secret set CLOUDFLARE_ACCOUNT_ID
+printf "%s" "<api-token>" | gh secret set CLOUDFLARE_API_TOKEN
+
+# 6. Trigger the first deploy
+git push origin main
+gh run watch  # tails the GitHub Actions run
+```
+
+After the first run, your site is live at `https://rivalslab.pages.dev/`. Each subsequent push redeploys in ~60 s.
+
+### Path B — Cloudflare git integration (no Actions, no secrets)
+
+If you'd rather skip GitHub Actions:
+
+1. Push the repo to GitHub (no secrets needed).
+2. Cloudflare dashboard → Workers & Pages → **Create application** → **Pages** → **Connect to Git** → pick the GitHub repo.
+3. Build settings: framework preset = `Astro`, build command = `npm run build`, output dir = `dist`, Node version = 22 (set under env vars: `NODE_VERSION=22`).
+4. Save and deploy. CF auto-deploys on every push to main + gives preview URLs for branch pushes.
+5. Delete `.github/workflows/deploy.yml` if you go this route — otherwise you'd double-deploy.
+
+### Custom domain (after first successful deploy)
+
+```bash
+# Cloudflare dashboard:
+# Workers & Pages → rivalslab → Custom domains → Add custom domain → rivalslab.gg
+# Cloudflare auto-creates the CNAME if the domain is on Cloudflare DNS.
+```
+
+Then in `src/consts.ts` confirm `SITE_URL = 'https://rivalslab.gg'` (already set), and `git push` so the new canonical hits the sitemap.
+
+### Email routing (required for AdSense application)
+
+```
+# Cloudflare dashboard → rivalslab.gg → Email → Email Routing → Enable
+# Add a custom address: hello@rivalslab.gg → forward to your real inbox
+```
+
+Test by sending an email to `hello@rivalslab.gg` from a different account.
+
+### Pre-launch checklist
 
 - [ ] Register `rivalslab.gg` (or fallback `.com` / `.pro`)
-- [ ] Create Cloudflare Pages project named `rivalslab` (`CF_PROJECT_NAME` in [`deploy.yml`](.github/workflows/deploy.yml))
-- [ ] Cloudflare Email Routing → `hello@rivalslab.gg`
-- [ ] Push to GitHub remote
-- [ ] GitHub Secrets: `CLOUDFLARE_API_TOKEN` (Pages — Edit template) + `CLOUDFLARE_ACCOUNT_ID`
-- [ ] Cloudflare Pages → Custom domains → add the domain
-- [ ] Submit `https://rivalslab.gg/sitemap-index.xml` to Google Search Console + Bing
+- [ ] Push the repo to GitHub
+- [ ] Create Cloudflare Pages project named `rivalslab`
+- [ ] Pick deploy Path A or B; complete that path's setup
+- [ ] Add custom domain
+- [ ] Enable Cloudflare Email Routing → `hello@rivalslab.gg`
+- [ ] Smoke test: `https://rivalslab.gg/`, `/team-ups/`, `/heroes/hulk/`, `/season/` all 200
+- [ ] Submit `https://rivalslab.gg/sitemap-index.xml` to [Google Search Console](https://search.google.com/search-console) + [Bing Webmaster Tools](https://www.bing.com/webmasters)
+- [ ] Verify [`public/_headers`](./public/_headers) is being applied via curl: `curl -I https://rivalslab.gg/ | grep -i strict-transport`
+- [ ] Verify [`public/_redirects`](./public/_redirects) is working: `curl -I https://rivalslab.gg/hero/hulk/` should 301 to `/heroes/hulk/`
+- [ ] Disable Cloudflare's "Always Use HTTPS" rule (the `_headers` HSTS does it already)
+- [ ] Enable Cloudflare Web Analytics (free, no JS overhead) — dashboard → Web Analytics → add site
+
+### Cloudflare-specific files
+
+| File | Purpose |
+|---|---|
+| [`public/_headers`](./public/_headers) | Security response headers (HSTS, XCTO, X-Frame, Permissions-Policy) + cache rules per path |
+| [`public/_redirects`](./public/_redirects) | 301 redirects for singular URL forms (`/hero/<id>/` → `/heroes/<id>/`) — preserves link equity from inbound forum links |
+| `.wrangler/` | Local wrangler state (gitignored). Created by `npx wrangler pages dev` for local CF-environment preview. |
 
 ## Monetization roadmap
 

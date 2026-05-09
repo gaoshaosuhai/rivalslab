@@ -1,7 +1,8 @@
 name: Monthly maintenance reminder
 
-# Opens a GitHub issue on the 1st of each month with the maintenance checklist.
+# Opens a GitHub issue on the 1st of each month with the RivalsLab checklist.
 # Designed for solo maintainers — keeps the cadence visible without external tools.
+# See MAINTENANCE.md for the full playbook.
 
 on:
   schedule:
@@ -27,31 +28,65 @@ jobs:
 
             const body = `Monthly data + content review for **${month}**.
 
-            ## Per-patch updates (only if a new patch shipped this month)
+            See [MAINTENANCE.md](./MAINTENANCE.md) for the full playbook.
 
-            - [ ] **\`src/consts.ts\`** — bump SOURCE_VERSION / TARGET_VERSION / SNAPSHOT_DATE
-            - [ ] **\`src/data/patches.ts\`** — move shipped FORECAST → TARGET_PATCHES, add new SOURCE_PATCHES entry
-            - [ ] **\`src/data/codes.ts\`** — refresh active codes
-            - [ ] **\`src/data/events.ts\`** — refresh active events
-            - [ ] Update entity / boss / region data files for any patch-changed entries
+            ## Per-patch updates (only if X.0 or X.5 patch shipped this month)
+
+            - [ ] **\`src/consts.ts\`** — bump SOURCE_VERSION / TARGET_VERSION / TARGET_VERSION_NAME / SNAPSHOT_DATE
+            - [ ] **\`src/data/patches.ts\`** — prepend shipped patch to TARGET_PATCHES, refresh UPCOMING
+            - [ ] **\`src/data/heroes.ts\`** — add new heroes; tier-shift balance changes; **default new heroes to A-tier for first 48 h**
+            - [ ] **\`src/data/team-ups.ts\`** — add new Team-Ups; **REMOVE deactivated Team-Ups** (do NOT leave dead entries)
+            - [ ] **\`src/data/maps.ts\`** — only if new map or rotation; bump LAST_REVIEWED regardless
+            - [ ] **\`src/data/events.ts\`** — refresh active events; add Path-to-Doomsday arc beats as confirmed
+            - [ ] **\`src/pages/guides/season-N-meta.astro\`** — rotate forecast → retro after launch; write next forecast
             - [ ] Bump \`LAST_REVIEWED\` on EVERY data file you touched
+
+            ## Bug-fix patches mid-month
+
+            - [ ] Prepend bug-fix entry to TARGET_PATCHES with NetEase bulletin URL
+            - [ ] Bump \`LAST_REVIEWED\` on \`patches.ts\`
+
+            ## Path-to-Doomsday event arc beats (2026)
+
+            - [ ] **Jun 2026** — Avengers: Age of Ultron event window
+            - [ ] **Aug 2026** — Infinity War event window
+            - [ ] **Oct 2026** — Endgame event window
+            - [ ] **Dec 2026** — Doomsday film tie-in event window
 
             ## Quarterly content checks
 
-            - [ ] Verify all interactive tools work (planner, calculator, picker)
-            - [ ] Re-skim 2-3 competitor sites; retune tier judgments if community consensus shifted
+            - [ ] Re-skim rivalsmeta.com + Mobalytics tier lists; retune if consensus shifted ≥1 tier on multiple heroes
+            - [ ] Test all interactive tools (\`/team-ups/\` filter, \`/season/\` countdown, CookieBanner)
+            - [ ] Open dev console on every tool page — zero JS errors
             - [ ] Lighthouse spot-check homepage — perf + SEO ≥ 95
+
+            ## Data integrity check (run before push)
+
+            \`\`\`bash
+            # Cross-reference team-up anchor/secondary/bestMaps + map.topHeroes against hero/map ids
+            # See MAINTENANCE.md → Data integrity check for the full snippet
+            \`\`\`
 
             ## Ship
 
             - [ ] \`npm run build\` clean (zero warnings)
-            - [ ] \`git push origin main\` — GitHub Actions auto-deploys to Cloudflare Pages
-            - [ ] Spot-check live site
+            - [ ] \`git push origin main\` — auto-deploys to Cloudflare Pages
+            - [ ] Spot-check live site at https://rivalslab.gg/
+
+            ## Sources to scan first
+
+            - [Marvel Rivals patch news](https://www.marvelrivals.com/news) — official patch notes
+            - [marvelrivals.gg team-ups](https://marvelrivals.gg/team-ups/) — Team-Up active/inactive status
+            - [rivalsmeta.com tier list](https://rivalsmeta.com/tier-list/team-ups) — community tier consensus
+            - [Mobalytics MR tier](https://mobalytics.gg/marvel-rivals/tier-list)
+            - [/r/marvelrivals](https://www.reddit.com/r/marvelrivals/) — meta drift + balance complaints
+            - [Beebom team-ups roster](https://beebom.com/marvel-rivals-team-ups/) — full active list
 
             ## When to escalate
 
             If you're more than 60 days past the last \`LAST_REVIEWED\` bump, do an emergency catch-up
-            review OR add a hiatus banner to the homepage. See OPERATE.md.
+            review OR add a hiatus banner to the homepage. The footer's freshness signal IS your
+            credibility.
 
             _Auto-generated on ${today}_`;
 

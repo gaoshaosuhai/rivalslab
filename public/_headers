@@ -1,0 +1,38 @@
+# Cloudflare Pages response headers.
+# Format reference: https://developers.cloudflare.com/pages/configuration/headers/
+#
+# Goals:
+#   - Block clickjacking + MIME sniffing
+#   - Force HTTPS via HSTS
+#   - Restrict permissions APIs we don't use
+#   - Long-cache hashed Astro assets; short-cache HTML so patch updates reach users fast
+
+/*
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=(), interest-cohort=()
+  X-DNS-Prefetch-Control: on
+
+# Hashed Astro asset bundles — long-lived cache, immutable.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Static images — long cache (we version them by replacing the file when we update).
+/favicon.svg
+  Cache-Control: public, max-age=2592000
+/og-default.svg
+  Cache-Control: public, max-age=2592000
+
+# Sitemap + robots — short cache so search engines pick up new URLs after each patch.
+/sitemap-index.xml
+  Cache-Control: public, max-age=3600
+/sitemap-0.xml
+  Cache-Control: public, max-age=3600
+/robots.txt
+  Cache-Control: public, max-age=3600
+
+# RSS — bi-hourly cache.
+/rss.xml
+  Cache-Control: public, max-age=7200

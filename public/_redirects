@@ -1,0 +1,21 @@
+# Cloudflare Pages redirects.
+# Format reference: https://developers.cloudflare.com/pages/configuration/redirects/
+#
+# Inbound links from forums / Reddit / Discord may use singular URL forms even
+# though our canonicals are plural. Redirect 301 to the canonical so Google
+# consolidates link equity.
+
+/hero/*       /heroes/:splat       301
+/map/*        /maps/:splat         301
+/team-up/*    /team-ups/:splat     301
+/teamup/*     /team-ups/:splat     301
+/teamups/*    /team-ups/:splat     301
+/patch/*      /patches/:splat      301
+/guide/*      /guides/:splat       301
+/tierlist     /tier-list/          301
+/tierlist/*   /tier-list/          301
+/best-team-ups       /team-ups/    301
+/best-team-up        /team-ups/    301
+/marvel-rivals-tier-list  /tier-list/  301
+/season-8       /season/           301
+/season8        /season/           301
