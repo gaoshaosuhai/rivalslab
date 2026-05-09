@@ -1,0 +1,138 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import AdSlot from '@/components/AdSlot.astro';
+
+interface RankBlock {
+  rank: string;
+  range: string;
+  vibe: string;
+  picks: { id: string; name: string; role: string; why: string }[];
+  avoid: { id: string; name: string; why: string }[];
+}
+
+const RANKS: RankBlock[] = [
+  {
+    rank: 'Bronze → Silver',
+    range: 'Placement to climbing out of the bottom',
+    vibe: 'Almost no one plays Strategist. Hero choice matters less than role fill.',
+    picks: [
+      { id: 'luna-snow', name: 'Luna Snow', role: 'Strategist', why: 'Universal pick. Easy heal kit, ult that wins fights single-handedly.' },
+      { id: 'punisher', name: 'Punisher', role: 'Duelist', why: 'Hitscan with no movement tech to learn. Aim is the hardest thing your team has at this rank.' },
+      { id: 'groot', name: 'Groot', role: 'Vanguard', why: 'Walls block enemy ults. Forgiving positioning. Planet X Pals carries low-rank teamfights.' },
+    ],
+    avoid: [
+      { id: 'spider-man', name: 'Spider-Man', why: 'Mechanical ceiling > floor. Tilts hard if your team can\'t follow up dives.' },
+      { id: 'magik', name: 'Magik', why: 'Portal tech requires comms. Solo-queue teammates won\'t rotate to your portals at this rank.' },
+    ],
+  },
+  {
+    rank: 'Gold → Platinum',
+    range: 'Where most players plateau',
+    vibe: 'Counter-picking starts to matter. Hero proficiency > raw aim.',
+    picks: [
+      { id: 'jeff-the-land-shark', name: 'Jeff the Land Shark', role: 'Strategist', why: 'Ult-swallow is a fight-winner at this rank. Players don\'t track ult timers; you do.' },
+      { id: 'captain-america', name: 'Captain America', role: 'Vanguard', why: 'Stars Aligned with Winter Soldier creates a frontline + flank pressure combo your team will follow.' },
+      { id: 'iron-fist', name: 'Iron Fist', role: 'Duelist', why: 'Dives kill solo-positioning Strategists. At this rank, supports over-extend constantly.' },
+    ],
+    avoid: [
+      { id: 'hawkeye', name: 'Hawkeye', why: 'Bow precision punished by Plat-tier maps with corners. Wait for Diamond+ where sightlines hold.' },
+      { id: 'doctor-strange', name: 'Doctor Strange', why: 'Portals need comms; positioning ceiling is beyond what Plat lobbies use.' },
+    ],
+  },
+  {
+    rank: 'Diamond → Grandmaster',
+    range: 'Hero bans unlock at Diamond III',
+    vibe: 'Team-Ups define drafts. The right pick depends on the enemy\'s Team-Up, not the enemy hero.',
+    picks: [
+      { id: 'black-cat', name: 'Black Cat', role: 'Duelist', why: 'Lucky Loan reflective shield is the meta-defining anti-dive tech in S7.5.' },
+      { id: 'venom', name: 'Venom', role: 'Vanguard', why: 'Symbiote Shenanigans backline-sustain pillar. Diamond+ teams know how to follow up your dives.' },
+      { id: 'adam-warlock', name: 'Adam Warlock', role: 'Strategist', why: 'Cosmic Cyclone with Storm or Duality Dance with Luna — highest support ceiling at this rank.' },
+    ],
+    avoid: [
+      { id: 'squirrel-girl', name: 'Squirrel Girl', why: 'Bouncing projectiles get walled by Diamond positioning. No Team-Up to anchor.' },
+      { id: 'namor', name: 'Namor', why: 'Turrets can\'t out-pressure coordinated Diamond comps. Bring sustained DPS.' },
+    ],
+  },
+  {
+    rank: 'Celestial → One Above All',
+    range: 'Top 500 — every match matters',
+    vibe: 'Meta-defining picks only. Solo-queue grief = fall back to Eternity.',
+    picks: [
+      { id: 'iron-man', name: 'Iron Man', role: 'Duelist', why: 'Stark Protocol + Ultron is the strongest mid-range pressure tool in the game. Pair flex.' },
+      { id: 'hela', name: 'Hela', role: 'Duelist', why: 'Deep Wrath site lockdown still warps drafts at this rank.' },
+      { id: 'luna-snow', name: 'Luna Snow', role: 'Strategist', why: 'Chilling Assault and Blessing of the Kumiho — two top-tier anchors. Universal flex.' },
+    ],
+    avoid: [
+      { id: 'deadpool', name: 'Deadpool', why: 'Multi-Role flex sounds elite but at this rank, single-role specialists out-execute jack-of-trades.' },
+      { id: 'parker-power-up', name: 'Parker Power-Up dependents', why: 'C-tier Team-Up at this rank. Spider-Verse comps fall to Symbiote Shenanigans + dive-counters.' },
+    ],
+  },
+];
+---
+
+<BaseLayout
+  title="Best heroes by rank — Marvel Rivals (Bronze to One Above All)"
+  description="Marvel Rivals best heroes per rank — Bronze through Celestial. Rank-aware picks, what to avoid, and why the meta shifts at each tier."
+>
+  <article class="container-narrow py-10 md:py-14 max-w-3xl">
+    <div class="text-xs uppercase tracking-widest text-[color:var(--fg-dim)] mb-3">
+      <a href="/guides/" class="hover:text-[color:var(--accent)]">Guides</a> /
+      <span class="text-[color:var(--fg-muted)]">Best heroes by rank</span>
+    </div>
+    <span class="chip chip-cosmic">Climb</span>
+
+    <h1 class="display-tight text-4xl md:text-5xl uppercase tracking-tight mt-4">Best heroes by rank</h1>
+    <p class="mt-3 text-lg text-[color:var(--fg-muted)] leading-relaxed">
+      The hero that climbs Bronze loses you Plat. The hero that wins Diamond can't carry Bronze. Rank-aware
+      picking is the cheapest tilt-prevention there is.
+    </p>
+
+    <div class="mt-10 space-y-12">
+      {
+        RANKS.map((block, i) => (
+          <section>
+            <div class="flex flex-wrap items-baseline gap-3 mb-2">
+              <h2 class="display text-2xl uppercase tracking-tight text-[color:var(--fg)]">{block.rank}</h2>
+              <span class="text-xs text-[color:var(--fg-dim)] uppercase tracking-widest">{block.range}</span>
+            </div>
+            <p class="text-[color:var(--fg-muted)] leading-relaxed mb-4">{block.vibe}</p>
+
+            <h3 class="text-xs uppercase tracking-widest text-[color:var(--accent)] font-semibold mt-4 mb-2">Pick</h3>
+            <ul class="space-y-2.5 mb-5">
+              {block.picks.map((p) => (
+                <li class="card p-3">
+                  <a href={`/heroes/${p.id}/`} class="font-medium text-[color:var(--fg)] hover:text-[color:var(--accent)]">{p.name}</a>
+                  <span class="text-xs text-[color:var(--fg-dim)] ml-2 uppercase">{p.role}</span>
+                  <p class="text-sm text-[color:var(--fg-muted)] mt-1.5 leading-snug">{p.why}</p>
+                </li>
+              ))}
+            </ul>
+
+            <h3 class="text-xs uppercase tracking-widest text-[color:var(--warn)] font-semibold mt-4 mb-2">Avoid</h3>
+            <ul class="space-y-2">
+              {block.avoid.map((a) => (
+                <li class="text-sm text-[color:var(--fg-muted)]">
+                  <span class="text-[color:var(--fg)] font-medium">{a.name}</span>
+                  <span class="text-[color:var(--fg-dim)]"> — {a.why}</span>
+                </li>
+              ))}
+            </ul>
+
+            {i === 1 && <div class="mt-6"><AdSlot minHeight={120} /></div>}
+          </section>
+        ))
+      }
+
+      <section class="card-panel p-5 md:p-6">
+        <h2 class="display text-xl uppercase tracking-tight text-[color:var(--fg)] mb-3">The honest truth</h2>
+        <p class="text-[color:var(--fg-muted)] leading-relaxed">
+          Rank-aware picks shift outcomes by ~5–8% win rate, not 50%. The bigger move is
+          <strong class="text-[color:var(--fg)]">drafting the Team-Up that flips the matchup</strong>, not
+          the hero that statistically wins. See the <a href="/team-ups/" class="text-[color:var(--accent)]">Team-Up Explorer</a>
+          and <a href="/counter/" class="text-[color:var(--accent)]">Counter Picker</a> to find the synergy
+          your enemy comp can't deal with.
+        </p>
+      </section>
+    </div>
+  </article>
+</BaseLayout>

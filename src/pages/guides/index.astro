@@ -1,0 +1,53 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+const guides: Array<{ slug: string; title: string; blurb: string; tag: string }> = [
+  {
+    slug: 'getting-started',
+    title: 'New player guide — Marvel Rivals',
+    blurb: 'Pick your role, your first hero, and what to ignore for your first 20 matches.',
+    tag: 'Beginner',
+  },
+  {
+    slug: 'season-8-meta',
+    title: 'Season 8 meta forecast',
+    blurb: 'Cyclops and Moon Girl & Devil Dinosaur drop on May 15. Tier shifts, prep checklist, and Team-Ups to learn first.',
+    tag: 'Seasonal',
+  },
+  {
+    slug: 'best-heroes-by-rank',
+    title: 'Best heroes by rank — Bronze to Celestial',
+    blurb: 'Rank-aware hero picks. The right hero in Plat is wrong in Diamond. Here\'s the per-tier shortlist.',
+    tag: 'Climb',
+  },
+];
+---
+
+<BaseLayout
+  title="Marvel Rivals guides"
+  description="Long-form Marvel Rivals guides — beginner playbook, season forecast, rank-aware hero picks. Written in Diamond-III voice."
+>
+  <section class="container-wide pt-10 pb-6">
+    <div class="text-xs uppercase tracking-widest text-[color:var(--fg-dim)] mb-3">
+      <span class="text-[color:var(--fg-muted)]">Guides</span>
+    </div>
+    <h1 class="display-tight text-4xl md:text-6xl uppercase tracking-tight">Guides</h1>
+    <p class="mt-3 text-lg text-[color:var(--fg-muted)] max-w-3xl leading-relaxed">
+      Practical Marvel Rivals long-form. Written for the queue-anxious ranked grinder, not for the wiki bot.
+    </p>
+  </section>
+
+  <section class="container-wide pb-16">
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {
+        guides.map((g) => (
+          <a href={`/guides/${g.slug}/`} class="card-panel p-5 hover:border-[color:color-mix(in_oklab,var(--accent)_45%,transparent)] transition-colors block">
+            <span class="chip chip-accent">{g.tag}</span>
+            <div class="display text-xl uppercase tracking-tight mt-3 text-[color:var(--fg)]">{g.title}</div>
+            <p class="text-sm text-[color:var(--fg-muted)] mt-2 leading-snug">{g.blurb}</p>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>

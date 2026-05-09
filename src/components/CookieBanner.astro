@@ -1,0 +1,50 @@
+---
+// Lightweight storage notice. Currently we do NOT set advertising or analytics
+// cookies — only localStorage for filter preferences on Team-Up Explorer.
+// This banner exists for transparency and to future-proof for AdSense, where a
+// Google-compliant CMP will replace this script.
+---
+
+<div
+  id="rl-cookie-banner"
+  class="hidden fixed inset-x-0 bottom-0 z-50 border-t border-[color:var(--border)] backdrop-blur-md bg-[color:color-mix(in_oklab,var(--bg)_92%,transparent)]"
+  role="dialog"
+  aria-label="Storage notice"
+  aria-live="polite"
+>
+  <div class="container-wide py-3 md:py-4 flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-4 text-sm">
+    <p class="flex-1 text-[color:var(--fg-muted)] leading-relaxed">
+      RivalsLab stores filter preferences in your browser via
+      <code class="text-[color:var(--fg)]">localStorage</code> — nothing is sent to a server. No advertising
+      or analytics cookies are set today. <a href="/privacy/" class="underline">Privacy</a> · <a href="/terms/" class="underline">Terms</a>.
+    </p>
+    <button
+      type="button"
+      id="rl-cookie-dismiss"
+      class="shrink-0 px-4 py-1.5 rounded-md bg-[color:var(--accent)] text-[color:var(--color-panel-900)] font-semibold hover:bg-[color:var(--accent-soft)]"
+    >
+      Got it
+    </button>
+  </div>
+</div>
+
+<script is:inline>
+  (function () {
+    var KEY = 'rl-cookie-dismissed-v1';
+    var banner = document.getElementById('rl-cookie-banner');
+    if (!banner) return;
+    try {
+      if (window.localStorage && localStorage.getItem(KEY) === '1') return;
+    } catch (e) {
+      // localStorage blocked — show banner once per page load.
+    }
+    banner.classList.remove('hidden');
+    var btn = document.getElementById('rl-cookie-dismiss');
+    if (btn) {
+      btn.addEventListener('click', function () {
+        banner.classList.add('hidden');
+        try { localStorage.setItem(KEY, '1'); } catch (e) {}
+      });
+    }
+  })();
+</script>

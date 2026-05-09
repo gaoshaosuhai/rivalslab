@@ -1,0 +1,120 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SeasonCountdown from '@/components/islands/SeasonCountdown';
+import { UPCOMING, latestPatch } from '@/data/patches';
+import { ACTIVE_EVENTS } from '@/data/events';
+
+const upcoming = UPCOMING[0];
+const latest = latestPatch();
+---
+
+<BaseLayout
+  title="Season 8 release date — Marvel Rivals season countdown"
+  description="Live countdown to Marvel Rivals Season 8 release. Patch cadence (X.0 + X.5), reset rules, and what to prep before the new heroes drop."
+>
+  <section class="container-wide pt-10 pb-6">
+    <div class="text-xs uppercase tracking-widest text-[color:var(--fg-dim)] mb-3">
+      Tools / <span class="text-[color:var(--fg-muted)]">Season</span>
+    </div>
+    <h1 class="display-tight text-4xl md:text-6xl uppercase tracking-tight">
+      Season <span class="text-[color:var(--accent)]">Countdown</span>
+    </h1>
+    <p class="mt-3 text-lg text-[color:var(--fg-muted)] max-w-3xl leading-relaxed">
+      Live countdown to the next Marvel Rivals season + patch cadence, reset rules, and what to bank before the bell.
+    </p>
+  </section>
+
+  {upcoming && (
+    <section class="container-wide pb-10">
+      <SeasonCountdown
+        client:load
+        targetISO={upcoming.windowStart}
+        label={upcoming.codename}
+      />
+    </section>
+  )}
+
+  <section class="container-wide pb-10">
+    <div class="grid md:grid-cols-2 gap-4">
+      <div class="card-panel p-5 md:p-6">
+        <h2 class="display text-xl uppercase tracking-tight mb-3">Patch cadence</h2>
+        <ul class="space-y-3 text-sm text-[color:var(--fg-muted)] leading-relaxed">
+          <li>
+            <strong class="text-[color:var(--fg)]">9-week season</strong> — splits into X.0 (4 weeks) and X.5 (5 weeks).
+          </li>
+          <li>
+            <strong class="text-[color:var(--fg)]">X.0 patches</strong> ship a new hero + new Battle Pass + occasional new map.
+          </li>
+          <li>
+            <strong class="text-[color:var(--fg)]">X.5 patches</strong> ship 1 hero (often paired-debut), Team-Up shifts, and balance.
+          </li>
+          <li>
+            <strong class="text-[color:var(--fg)]">Bug-fix patches</strong> drop ad hoc — typically one mid-season.
+          </li>
+          <li>
+            <strong class="text-[color:var(--fg)]">Season reset</strong> drops every player 9 sub-tiers. Plan placement matches accordingly.
+          </li>
+        </ul>
+      </div>
+
+      <div class="card-panel p-5 md:p-6">
+        <h2 class="display text-xl uppercase tracking-tight mb-3">Bank before the bell</h2>
+        <ul class="space-y-3 text-sm text-[color:var(--fg-muted)] leading-relaxed">
+          <li>
+            <strong class="text-[color:var(--fg)]">Lattice</strong> — premium currency carries over. Stash for the new Luxury+ Battle Pass.
+          </li>
+          <li>
+            <strong class="text-[color:var(--fg)]">Chrono Tokens</strong> — DO NOT carry over. Convert before season end or lose them.
+          </li>
+          <li>
+            <strong class="text-[color:var(--fg)]">Comp climb</strong> — final Celestial+ rewards lock at season end. Push the last 24h.
+          </li>
+          <li>
+            <strong class="text-[color:var(--fg)]">Hero proficiency</strong> — XP carries over but ranked-distribution baseline resets.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  {latest && (
+    <section class="container-wide pb-10">
+      <div class="card p-5 md:p-6">
+        <div class="flex flex-wrap items-center gap-2 mb-2">
+          <span class="chip chip-accent">Live patch</span>
+          <span class="chip chip-muted">{latest.season}</span>
+          <span class="ml-auto text-xs text-[color:var(--fg-dim)]">{latest.date}</span>
+        </div>
+        <div class="display text-2xl uppercase tracking-tight">{latest.codename}</div>
+        <p class="text-sm text-[color:var(--fg-muted)] mt-2">
+          See <a href="/patches/" class="text-[color:var(--accent)] hover:text-[color:var(--accent-soft)]">all patches →</a>
+        </p>
+      </div>
+    </section>
+  )}
+
+  {ACTIVE_EVENTS.length > 0 && (
+    <section class="container-wide pb-16">
+      <h2 class="display text-2xl uppercase tracking-tight mb-4">Path to Doomsday — 2026 arc</h2>
+      <p class="text-[color:var(--fg-muted)] mb-4 max-w-3xl leading-relaxed">
+        The 2026 seasonal arc tracks the Avengers: Doomsday film build-up. Four event-mode beats arrive between June and December.
+      </p>
+      <ul class="grid md:grid-cols-2 gap-3">
+        {
+          ACTIVE_EVENTS.map((e) => (
+            <li class="card p-4">
+              <div class="flex flex-wrap items-baseline gap-2 mb-1">
+                <span class="font-medium text-[color:var(--fg)]">{e.name}</span>
+                <span class="chip chip-cosmic">{e.priority}</span>
+              </div>
+              <div class="text-xs text-[color:var(--fg-dim)] mb-2">
+                {e.startsAt} → {e.endsAt} · {e.patch}
+              </div>
+              <p class="text-sm text-[color:var(--fg-muted)]">{e.blurb}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  )}
+</BaseLayout>

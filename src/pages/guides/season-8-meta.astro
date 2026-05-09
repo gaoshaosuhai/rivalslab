@@ -1,0 +1,150 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import AdSlot from '@/components/AdSlot.astro';
+import { UPCOMING } from '@/data/patches';
+
+const s8 = UPCOMING[0];
+
+function daysUntilISO(iso: string): number {
+  const ms = new Date(iso + 'T00:00:00Z').getTime() - Date.now();
+  return Math.max(0, Math.ceil(ms / 86_400_000));
+}
+const days = s8 ? daysUntilISO(s8.windowStart) : 0;
+---
+
+<BaseLayout
+  title="Marvel Rivals Season 8 meta forecast — release date & tier shifts"
+  description="Marvel Rivals Season 8 release date, new heroes (Cyclops + Moon Girl/Devil Dinosaur), expected tier shifts, and the Team-Ups to practice before the patch lands."
+>
+  <article class="container-narrow py-10 md:py-14 max-w-3xl">
+    <div class="text-xs uppercase tracking-widest text-[color:var(--fg-dim)] mb-3">
+      <a href="/guides/" class="hover:text-[color:var(--accent)]">Guides</a> /
+      <span class="text-[color:var(--fg-muted)]">Season 8 meta</span>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-2 mb-4">
+      <span class="chip chip-warn">Seasonal</span>
+      {s8 && <span class="chip chip-accent">{days} days out</span>}
+    </div>
+
+    <h1 class="display-tight text-4xl md:text-5xl uppercase tracking-tight">Season 8 meta forecast</h1>
+    <p class="mt-3 text-lg text-[color:var(--fg-muted)] leading-relaxed">
+      Season 8 — <em>Path to Doomsday</em> — drops <strong class="text-[color:var(--fg)]">May 15, 2026</strong>.
+      Two new heroes (Cyclops, Moon Girl &amp; Devil Dinosaur), the start of the year-long
+      Avengers: Doomsday film tie-in arc, and the first major Team-Up shake-up since S7.5's Lucky Loan.
+    </p>
+
+    <div class="mt-10 space-y-10 text-[color:var(--fg-muted)] leading-relaxed">
+      <section>
+        <h2 class="display text-2xl uppercase tracking-tight text-[color:var(--fg)] mb-3">What we know is shipping</h2>
+        <ul class="space-y-2.5 list-disc pl-5">
+          <li>
+            <strong class="text-[color:var(--fg)]">Cyclops</strong> — Optic-blast Duelist confirmed in the S8 trailer.
+            Mid-range hitscan with a charge-and-release primary. Expected to enter the meta high — every new hero
+            does for the first 48 hours, regardless of actual strength.
+          </li>
+          <li>
+            <strong class="text-[color:var(--fg)]">Moon Girl &amp; Devil Dinosaur</strong> — Pair-controlled
+            Duelist/Vanguard hybrid. The first dual-controlled hero since launch; expected mechanical ceiling
+            is high.
+          </li>
+          <li>
+            <strong class="text-[color:var(--fg)]">Path to Doomsday</strong> — June: Avengers: Age of Ultron event;
+            August: Infinity War; October: Endgame; December: Doomsday tie-in for the film release.
+          </li>
+          <li>
+            <strong class="text-[color:var(--fg)]">Season reset</strong> drops every player 9 sub-tiers.
+            Plan placement matches around Cyclops counter-picks.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="display text-2xl uppercase tracking-tight text-[color:var(--fg)] mb-3">Expected tier shifts</h2>
+        <p>
+          Day-1 meta on a hero shooter is always inflated. Expected pattern in the first two weeks:
+        </p>
+        <ul class="mt-3 space-y-2.5 list-disc pl-5">
+          <li>
+            <strong class="text-[color:var(--fg)]">Cyclops debuts S-tier</strong> — every player picks him for the
+            first 48 hours. Win rate inflates because no one has practiced his counters yet.
+          </li>
+          <li>
+            <strong class="text-[color:var(--fg)]"><a href="/heroes/iron-fist/">Iron Fist</a> ↑</strong> —
+            mid-range hitscan duelists like Cyclops are vulnerable to dive. Iron Fist's mobility windows open up.
+          </li>
+          <li>
+            <strong class="text-[color:var(--fg)]"><a href="/heroes/daredevil/">Daredevil</a> ↑</strong> —
+            <a href="/team-ups/bestial-hunt/">Bestial Hunt</a> blind-grenade tech becomes more valuable as
+            Cyclops players hold sightlines.
+          </li>
+          <li>
+            <strong class="text-[color:var(--fg)]"><a href="/heroes/black-cat/">Black Cat</a> stays S</strong> —
+            <a href="/team-ups/lucky-loan/">Lucky Loan</a> reflective shield still flips dive comps. The S7.5
+            tech doesn't get worse with new dive heroes; it gets better.
+          </li>
+          <li>
+            <strong class="text-[color:var(--fg)]">Hitscan-counter Vanguards ↑</strong> — Magneto and
+            Doctor Strange shields gain value vs Cyclops's linear shots.
+          </li>
+        </ul>
+      </section>
+
+      <AdSlot minHeight={120} />
+
+      <section>
+        <h2 class="display text-2xl uppercase tracking-tight text-[color:var(--fg)] mb-3">Practice these now</h2>
+        <p>
+          The window between snapshot date and S8 launch is your prep period. The high-leverage moves:
+        </p>
+        <ol class="mt-3 space-y-2.5 list-decimal pl-5">
+          <li>
+            <strong class="text-[color:var(--fg)]">Practice Range Cyclops counters.</strong> Find his ult animation
+            frame data and the cooldown windows. The first 100 ranked players who have this memorized win Cyclops
+            mirrors all of week 1.
+          </li>
+          <li>
+            <strong class="text-[color:var(--fg)]">Drill <a href="/team-ups/bestial-hunt/">Bestial Hunt</a> +
+            <a href="/team-ups/lucky-loan/">Lucky Loan</a></strong> — both will be must-flex techs vs Cyclops.
+          </li>
+          <li>
+            <strong class="text-[color:var(--fg)]">Complete the S7.5 Battle Pass</strong>. Chrono Tokens DON'T
+            carry over. Spend or lose them.
+          </li>
+          <li>
+            <strong class="text-[color:var(--fg)]">Stash Lattice.</strong> Premium currency does carry over.
+            Save for the S8 Battle Pass Luxury+ tier (~2,100 Lattice / $20).
+          </li>
+        </ol>
+      </section>
+
+      <section>
+        <h2 class="display text-2xl uppercase tracking-tight text-[color:var(--fg)] mb-3">Don't fall for these</h2>
+        <ul class="space-y-2.5 list-disc pl-5">
+          <li>
+            <strong class="text-[color:var(--fg)]">"Cyclops is broken" within 24 hours.</strong> Every new hero
+            looks broken because no one knows the counters. Wait until day 5 for honest tier reads.
+          </li>
+          <li>
+            <strong class="text-[color:var(--fg)]">Climbing during placements without a flex.</strong> If you
+            haven't learned a Strategist by S8, your placement matches will land you a tier lower than S7.5.
+            The 9-sub-tier reset hits everyone — re-climb is faster with role flexibility.
+          </li>
+          <li>
+            <strong class="text-[color:var(--fg)]">Buying Cyclops cosmetics in week 1.</strong> Bundles cycle.
+            Wait for the mid-season discount or his Lord-rank set.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="display text-2xl uppercase tracking-tight text-[color:var(--fg)] mb-3">Watch this page</h2>
+        <p>
+          The forecast above will refine post-launch. We'll bump tier reads on May 16 once 24-hour data is in,
+          and again on May 22 once the meta settles. Bookmark <a href="/patches/">Patches</a> for the
+          patch-by-patch diff and <a href="/season/">Season Countdown</a> for the live timer.
+        </p>
+      </section>
+    </div>
+  </article>
+</BaseLayout>

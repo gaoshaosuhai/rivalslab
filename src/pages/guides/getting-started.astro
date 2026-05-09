@@ -1,0 +1,129 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import AdSlot from '@/components/AdSlot.astro';
+import { SNAPSHOT_DATE, TARGET_VERSION_NAME } from '@/consts';
+---
+
+<BaseLayout
+  title="New player guide — Marvel Rivals (S7.5)"
+  description="Practical Marvel Rivals beginner guide. Pick your role, your first hero, what to ignore for your first 20 matches, and how to avoid the Bronze-trap mistakes."
+>
+  <article class="container-narrow py-10 md:py-14 max-w-3xl">
+    <div class="text-xs uppercase tracking-widest text-[color:var(--fg-dim)] mb-3">
+      <a href="/guides/" class="hover:text-[color:var(--accent)]">Guides</a> /
+      <span class="text-[color:var(--fg-muted)]">Getting started</span>
+    </div>
+    <div class="flex flex-wrap items-center gap-2 mb-4">
+      <span class="chip chip-accent">Beginner</span>
+      <span class="chip chip-muted">Snapshot {SNAPSHOT_DATE}</span>
+    </div>
+
+    <h1 class="display-tight text-4xl md:text-5xl uppercase tracking-tight">New player guide</h1>
+    <p class="mt-3 text-lg text-[color:var(--fg-muted)] leading-relaxed">
+      Starting Marvel Rivals in {TARGET_VERSION_NAME || 'S7.5'}? Short version: pick a role you actually want
+      to play, lock in one hero per role, and ignore tier lists until you've done 20 ranked games. Tier alone
+      isn't a draft strategy.
+    </p>
+
+    <div class="mt-10 space-y-10 text-[color:var(--fg-muted)] leading-relaxed">
+      <section>
+        <h2 class="display text-2xl uppercase tracking-tight text-[color:var(--fg)] mb-3">Step 1 — Pick a role first, hero second</h2>
+        <p>
+          Marvel Rivals locks 2 Vanguards, 2 Duelists, 2 Strategists by default. The biggest Bronze mistake
+          is one-tricking a hero whose role is overstacked — you queue 6 minutes longer and your team fights
+          short-handed.
+        </p>
+        <p class="mt-3">
+          The fastest climb path is <strong class="text-[color:var(--fg)]">Strategist</strong>. Strategist
+          mains queue in 30 seconds, gain influence over teamfights, and have the highest rank-up rate
+          across every public dataset. Vanguard is a close second for the same reason.
+        </p>
+        <ul class="mt-3 space-y-1.5 list-disc pl-5">
+          <li>Want to play DPS? Pick a <a href="/heroes/">Duelist</a>, but accept longer queues.</li>
+          <li>Want to climb fast? Pick <a href="/heroes/luna-snow/">Luna Snow</a> or <a href="/heroes/jeff-the-land-shark/">Jeff</a> as a Strategist; <a href="/heroes/groot/">Groot</a> or <a href="/heroes/captain-america/">Cap</a> as a Vanguard.</li>
+          <li>Want to flex? <a href="/heroes/deadpool/">Deadpool</a> is the only Multi-Role hero — he can swap mid-match.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="display text-2xl uppercase tracking-tight text-[color:var(--fg)] mb-3">Step 2 — Learn one hero per role</h2>
+        <p>
+          Don't spread thin. Lock one Strategist, one Vanguard, one Duelist (the "trinity"). When the
+          enemy comp shifts, you swap roles, not heroes. This is what separates Plat from Diamond — flex
+          is not optional past Gold.
+        </p>
+        <p class="mt-3">
+          Easy starter trinity for fast climbing:
+        </p>
+        <ul class="mt-2 space-y-1.5 list-disc pl-5">
+          <li><strong class="text-[color:var(--fg)]"><a href="/heroes/luna-snow/">Luna Snow</a></strong> (Strategist) — universal pick, S-tier, easy heal kit.</li>
+          <li><strong class="text-[color:var(--fg)]"><a href="/heroes/groot/">Groot</a></strong> (Vanguard) — wall builds + Planet X Pals synergy. Highest skill-to-impact ratio.</li>
+          <li><strong class="text-[color:var(--fg)]"><a href="/heroes/punisher/">Punisher</a></strong> (Duelist) — hitscan flex, easy aim, Bestial Hunt anti-sniper tech.</li>
+        </ul>
+      </section>
+
+      <AdSlot minHeight={120} />
+
+      <section>
+        <h2 class="display text-2xl uppercase tracking-tight text-[color:var(--fg)] mb-3">Step 3 — Draft the Team-Up, not the hero</h2>
+        <p>
+          The single biggest move that separates Diamond from Grandmaster: counter-pick the
+          <strong class="text-[color:var(--fg)]">Team-Up</strong>, not the hero. If they have a Hela on
+          long sightlines, you don't just pick Iron Fist — you lock <a href="/heroes/daredevil/">Daredevil</a>
+          to enable the <a href="/team-ups/bestial-hunt/">Bestial Hunt</a> blind grenade. The Team-Up flips
+          the matchup; the hero swap doesn't.
+        </p>
+        <p class="mt-3">
+          Browse the full list on the <a href="/team-ups/">Team-Up Explorer</a>. Filter by anchor or role;
+          all 25 active S7.5 synergies are there.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="display text-2xl uppercase tracking-tight text-[color:var(--fg)] mb-3">Step 4 — Ignore these for 20 matches</h2>
+        <ul class="space-y-2.5 list-disc pl-5">
+          <li>
+            <strong class="text-[color:var(--fg)]">Tier lists.</strong> Tier alone isn't a strategy. A B-tier
+            hero you can play well outperforms an S-tier you mash buttons on. Read tiers AFTER you have a
+            main.
+          </li>
+          <li>
+            <strong class="text-[color:var(--fg)]">Lattice purchases.</strong> Don't buy skins until S8
+            (May 15). New season = new bundles. Lattice carries over, Chrono Tokens don't.
+          </li>
+          <li>
+            <strong class="text-[color:var(--fg)]">YouTube one-tricks for Spider-Man / Black Panther / Magik.</strong>
+            All three are mechanically demanding. Watch them but don't play them as your first hero. They
+            tilt below Plat.
+          </li>
+          <li>
+            <strong class="text-[color:var(--fg)]">Quick Match meta.</strong> QM has no role lock and players
+            grief picks. Use Practice Range and Conquest to learn kits; don't read your QM win rate as a meta
+            signal.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="display text-2xl uppercase tracking-tight text-[color:var(--fg)] mb-3">Step 5 — Read the map, not the kill feed</h2>
+        <p>
+          Every map favors specific roles. <a href="/maps/yggdrasill-path/">Yggdrasill Path</a> is a
+          Vanguard map; <a href="/maps/museum-of-contemplation/">Museum of Contemplation</a> rewards
+          long-sightline Duelists; <a href="/maps/symbiotic-surface/">Symbiotic Surface</a> is built for
+          Symbiote Shenanigans (Venom + Jeff + Hela). The Map Picks page lists all 14 active maps with
+          role lean and recommended team-ups.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="display text-2xl uppercase tracking-tight text-[color:var(--fg)] mb-3">Bookmarks — the four pages to keep open</h2>
+        <ul class="space-y-2 list-disc pl-5">
+          <li><a href="/team-ups/">Team-Up Explorer</a> — your draft-phase reference</li>
+          <li><a href="/maps/">Map Picks</a> — pre-game checks</li>
+          <li><a href="/counter/">Counter Picker</a> — when the enemy locks early</li>
+          <li><a href="/season/">Season Countdown</a> — bank Lattice, dump Chrono Tokens before reset</li>
+        </ul>
+      </section>
+    </div>
+  </article>
+</BaseLayout>

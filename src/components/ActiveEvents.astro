@@ -1,0 +1,63 @@
+---
+import { daysUntil, eventsRunningOn, upcomingEvents } from '@/data/events';
+
+interface Props {
+  /** How many to show. */
+  limit?: number;
+  /** Variant. */
+  variant?: 'compact' | 'full';
+}
+const { limit, variant = 'compact' } = Astro.props;
+
+const now = new Date();
+const running = eventsRunningOn(now).sort((a, b) => a.endsAt.localeCompare(b.endsAt));
+const upcoming = upcomingEvents(now);
+// Show running first; if none running, show upcoming so the section never empties.
+const candidates = running.length > 0 ? running : upcoming;
+const list = limit ? candidates.slice(0, limit) : candidates;
+const showingUpcoming = running.length === 0 && upcoming.length > 0;
+---
+
+{
+  list.length > 0 && (
+    <div class="card-panel p-5 md:p-6">
+      <div class="flex items-baseline justify-between gap-3 mb-3">
+        <h3 class="display text-xl uppercase tracking-tight text-[color:var(--fg)]">
+          {showingUpcoming ? 'Coming up' : variant === 'compact' ? 'Active right now' : 'Active events'}
+        </h3>
+        <span class="text-xs text-[color:var(--fg-dim)] uppercase tracking-widest">
+          {showingUpcoming ? `${upcoming.length} queued` : `${running.length} live`}
+        </span>
+      </div>
+      <ul class={variant === 'compact' ? 'space-y-3' : 'grid gap-3 md:grid-cols-2'}>
+        {list.map((e) => {
+          const inDays = showingUpcoming ? daysUntil(e.startsAt) : daysUntil(e.endsAt);
+          const urgent = !showingUpcoming && inDays < 4;
+          const label = showingUpcoming
+            ? inDays > 0 ? `starts in ${inDays}d` : 'starts today'
+            : inDays > 0 ? `${inDays}d left` : 'ends today';
+          const priorityChip = e.priority === 'Hero' ? 'chip chip-warn' : e.priority === 'Strong' ? 'chip chip-accent' : 'chip chip-muted';
+          const urgencyChip = urgent ? 'chip chip-warn' : showingUpcoming ? 'chip chip-cosmic' : 'chip';
+          const liClass = variant === 'compact' ? '' : 'card p-4 bg-[color:var(--bg-soft)]';
+          return (
+            <li class={liClass}>
+              <div class="flex flex-wrap items-baseline gap-2">
+                <span class="font-medium text-[color:var(--fg)]">{e.name}</span>
+                <span class={priorityChip}>{e.priority}</span>
+                <span class={urgencyChip}>{label}</span>
+              </div>
+              <p class="text-xs text-[color:var(--fg-muted)] mt-1 leading-relaxed">{e.blurb}</p>
+              {e.rewards.length > 0 && (
+                <ul class="mt-1.5 flex flex-wrap gap-1.5">
+                  {e.rewards.map((r) => (
+                    <li class="chip chip-muted">{r}</li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  )
+}

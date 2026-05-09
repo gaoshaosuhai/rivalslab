@@ -21,7 +21,7 @@ const year = new Date().getFullYear();
 ---
 
 <footer class="mt-24 border-t border-[color:var(--border)]">
-  <div class="container-narrow py-10 grid gap-6 md:grid-cols-3 text-sm text-[color:var(--fg-muted)]">
+  <div class="container-wide py-10 grid gap-6 md:grid-cols-2 lg:grid-cols-4 text-sm text-[color:var(--fg-muted)]">
     <div>
       <div class="display text-[color:var(--fg)] text-lg uppercase tracking-wide">{SITE_NAME}</div>
       <p class="mt-2 leading-relaxed">
@@ -33,8 +33,22 @@ const year = new Date().getFullYear();
     </div>
 
     <div>
+      <div class="text-[color:var(--fg)] font-medium mb-2">Tools</div>
+      <ul class="space-y-1.5">
+        <li><a href="/team-ups/">Team-Up Explorer</a></li>
+        <li><a href="/maps/">Map Picks</a></li>
+        <li><a href="/counter/">Counter Picker</a></li>
+        <li><a href="/heroes/">Heroes</a></li>
+        <li><a href="/season/">Season Countdown</a></li>
+      </ul>
+    </div>
+
+    <div>
       <div class="text-[color:var(--fg)] font-medium mb-2">Site</div>
       <ul class="space-y-1.5">
+        <li><a href="/guides/">Guides</a></li>
+        <li><a href="/patches/">Patches</a></li>
+        <li><a href="/tier-list/">Tier list</a></li>
         <li><a href="/about/">About</a></li>
         <li><a href="/privacy/">Privacy</a></li>
         <li><a href="/terms/">Terms</a></li>
@@ -51,7 +65,7 @@ const year = new Date().getFullYear();
   </div>
 
   <div class="border-t border-[color:var(--border)] py-4">
-    <div class="container-narrow flex flex-wrap gap-3 items-center justify-between text-xs text-[color:var(--fg-dim)]">
+    <div class="container-wide flex flex-wrap gap-3 items-center justify-between text-xs text-[color:var(--fg-dim)]">
       <span>© {year} {SITE_NAME}</span>
     </div>
   </div>

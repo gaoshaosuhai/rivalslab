@@ -6,6 +6,7 @@ import { HEROES } from '@/data/heroes';
 import { MAPS } from '@/data/maps';
 import { latestPatch, UPCOMING } from '@/data/patches';
 import { heroById } from '@/data/heroes';
+import ActiveEvents from '@/components/ActiveEvents.astro';
 
 const featuredTeamUps = teamUpsByTier().slice(0, 4);
 const upcoming = UPCOMING[0];
@@ -146,6 +147,11 @@ const s8Days = upcoming ? daysUntilISO(upcoming.windowStart) : 0;
         <p class="mt-2 text-sm text-[color:var(--fg-muted)]">{heroCount} hero pages — counters, team-ups, best maps.</p>
       </a>
     </div>
+  </section>
+
+  {/* Active / upcoming events */}
+  <section class="container-wide py-6">
+    <ActiveEvents variant="full" limit={3} />
   </section>
 
   {/* Latest patch teaser */}
