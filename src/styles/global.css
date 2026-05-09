@@ -1,0 +1,245 @@
+@import 'tailwindcss';
+
+/*
+  RivalsLab palette — sampled from marvelrivals.com, in-game GUI ("Art Vision Vol. 01"),
+  and ranked tier badges. Energy Yellow + Fissure Black + Comic-pow Red.
+
+  See DESIGN.md → Visual identity for the full sampling rationale.
+  Token scale renamed --color-ink-* → --color-panel-* to break visual lineage from
+  prior projects (MapleAhead, Where Winds Meet) which used --color-ink-* on
+  amber/jade palettes. Comic "panel" reads natively for hero-shooter audience.
+*/
+
+@theme {
+  --font-display: 'Anton', 'Russo One', 'Bebas Neue', Impact, ui-sans-serif, sans-serif;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  --font-mono: ui-monospace, SFMono-Regular, 'JetBrains Mono', Menlo, monospace;
+
+  /* Panel scale — comic-page neutrals from radiant white to fissure black. */
+  --color-panel-50:  #f5f5f7;
+  --color-panel-100: #e5e6ea;
+  --color-panel-200: #c4c6cd;
+  --color-panel-300: #a0a3ad;
+  --color-panel-400: #6b6e78;
+  --color-panel-500: #41444c;
+  --color-panel-600: #2a2c34;
+  --color-panel-700: #1f2129;
+  --color-panel-800: #15161c;
+  --color-panel-900: #0b0b0f;
+
+  /* Energy Yellow — primary signature accent. */
+  --color-accent-300: #ffe873;
+  --color-accent-400: #ffd60a;
+  --color-accent-500: #e6b800;
+  --color-accent-600: #b38f00;
+
+  /* Comic-pow red — warn / danger. */
+  --color-warn-400: #ff3b3b;
+  --color-warn-500: #d62828;
+  --color-warn-600: #a11212;
+
+  /* Cosmic violet — Strategist role tint, used sparingly. */
+  --color-cosmic-400: #7c3aed;
+  --color-cosmic-500: #6d28d9;
+}
+
+:root {
+  color-scheme: dark;
+  --bg: var(--color-panel-900);
+  --bg-soft: var(--color-panel-800);
+  --bg-card: var(--color-panel-700);
+  --fg: var(--color-panel-50);
+  --fg-muted: var(--color-panel-300);
+  --fg-dim: var(--color-panel-400);
+
+  --accent: var(--color-accent-400);
+  --accent-strong: var(--color-accent-500);
+  --accent-soft: var(--color-accent-300);
+
+  --warn: var(--color-warn-400);
+  --cosmic: var(--color-cosmic-400);
+
+  --border: color-mix(in oklab, var(--color-panel-300) 14%, transparent);
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--accent-soft);
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--color-panel-900);
+}
+
+/* Half-tone dot motif — comic-page texture, low-opacity, full-page. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background-image: radial-gradient(
+    circle at 50% 50%,
+    color-mix(in oklab, var(--color-accent-400) 14%, transparent) 1.1px,
+    transparent 1.4px
+  );
+  background-size: 18px 18px;
+  opacity: 0.45;
+  mask-image: radial-gradient(ellipse at 30% 0%, black 0%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse at 30% 0%, black 0%, transparent 70%);
+}
+
+/* Subtle vignette glow from accent + cosmic to suggest hero-shooter cinematic depth. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    radial-gradient(900px 540px at 12% -8%, color-mix(in oklab, var(--color-accent-500) 14%, transparent), transparent 65%),
+    radial-gradient(700px 480px at 95% 110%, color-mix(in oklab, var(--color-cosmic-500) 18%, transparent), transparent 65%);
+}
+
+.container-wide {
+  max-width: 84rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+.container-narrow {
+  max-width: 72rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+/* Comic panel card. */
+.card {
+  background: color-mix(in oklab, var(--bg-card) 92%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 0.6rem;
+  backdrop-filter: blur(2px);
+}
+
+.card-panel {
+  background: color-mix(in oklab, var(--bg-card) 94%, transparent);
+  border: 1px solid var(--border);
+  /* Diagonal cut on top-right corner — the "kapow" angled-panel motif. */
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: 1px solid var(--border);
+  color: var(--fg-muted);
+  font-weight: 600;
+}
+
+.chip-accent {
+  background: color-mix(in oklab, var(--accent) 18%, transparent);
+  border-color: color-mix(in oklab, var(--accent) 40%, transparent);
+  color: var(--accent);
+}
+
+.chip-warn {
+  background: color-mix(in oklab, var(--warn) 16%, transparent);
+  border-color: color-mix(in oklab, var(--warn) 38%, transparent);
+  color: var(--warn);
+}
+
+.chip-cosmic {
+  background: color-mix(in oklab, var(--cosmic) 18%, transparent);
+  border-color: color-mix(in oklab, var(--cosmic) 36%, transparent);
+  color: color-mix(in oklab, var(--cosmic) 80%, white);
+}
+
+.chip-muted {
+  background: color-mix(in oklab, var(--color-panel-500) 25%, transparent);
+}
+
+/* Stat numerals — Anton condensed display sans, comic-poster impact. */
+.stat-num {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: 1;
+}
+
+/* Display headline utility — Anton, never serif. */
+.display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: 0.005em;
+  line-height: 0.95;
+}
+
+.display-tight {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+  line-height: 0.92;
+}
+
+.progress-track {
+  position: relative;
+  height: 6px;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--fg-dim) 18%, transparent);
+  overflow: hidden;
+}
+.progress-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: linear-gradient(90deg, var(--accent-strong), var(--accent));
+  border-radius: inherit;
+  transition: width 200ms ease-out;
+}
+
+/* Hero portrait frame — hexagonal clip, restricted to portrait use only.
+   Never apply as a background pattern (that's MapleAhead's signature). */
+.hex-portrait {
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  aspect-ratio: 1 / 1.155;
+}
+
+/* Diagonal panel slash — used as section divider accent. */
+.kapow-divider {
+  position: relative;
+  height: 24px;
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    transparent 48%,
+    var(--accent) 48%,
+    var(--accent) 52%,
+    transparent 52%,
+    transparent 100%
+  );
+  opacity: 0.6;
+}
+
+/* Role tints used across hero / team-up cards. */
+.role-vanguard { color: #6db1ff; }
+.role-duelist  { color: #ff7a59; }
+.role-strategist { color: #b794f4; }

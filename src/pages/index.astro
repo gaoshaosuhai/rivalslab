@@ -1,0 +1,182 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { SITE_NAME, SITE_TAGLINE, TARGET_VERSION_NAME } from '@/consts';
+import { TEAM_UPS, teamUpsByTier } from '@/data/team-ups';
+import { HEROES } from '@/data/heroes';
+import { MAPS } from '@/data/maps';
+import { latestPatch, UPCOMING } from '@/data/patches';
+import { heroById } from '@/data/heroes';
+
+const featuredTeamUps = teamUpsByTier().slice(0, 4);
+const upcoming = UPCOMING[0];
+const latest = latestPatch();
+const heroCount = HEROES.length;
+const mapCount = MAPS.length;
+const teamUpCount = TEAM_UPS.length;
+
+function daysUntilISO(iso: string): number {
+  const ms = new Date(iso + 'T00:00:00Z').getTime() - Date.now();
+  return Math.max(0, Math.ceil(ms / 86_400_000));
+}
+
+const s8Days = upcoming ? daysUntilISO(upcoming.windowStart) : 0;
+---
+
+<BaseLayout title={SITE_NAME} description={SITE_TAGLINE}>
+  {/* Season 8 alert strip */}
+  {
+    upcoming && s8Days > 0 && (
+      <div class="bg-[color:color-mix(in_oklab,var(--accent)_18%,transparent)] border-b border-[color:color-mix(in_oklab,var(--accent)_35%,transparent)]">
+        <div class="container-wide py-2.5 flex flex-wrap items-center gap-3 text-sm">
+          <span class="chip chip-accent">{upcoming.targetVersion} incoming</span>
+          <span class="text-[color:var(--fg)]">
+            <strong class="text-[color:var(--accent)]">{upcoming.codename}</strong> — drops in <strong>{s8Days}</strong> days
+          </span>
+          <a href="/patches/" class="ml-auto text-[color:var(--accent)] hover:text-[color:var(--accent-soft)] font-medium">
+            See the diff →
+          </a>
+        </div>
+      </div>
+    )
+  }
+
+  {/* Hero — Team-Up Explorer is the headline */}
+  <section class="container-wide pt-10 md:pt-16 pb-8">
+    <div class="grid lg:grid-cols-[1.4fr_1fr] gap-8 items-center">
+      <div>
+        <span class="chip chip-cosmic">Headline tool</span>
+        <h1 class="display text-5xl md:text-7xl uppercase mt-4 leading-[0.9] tracking-tight">
+          Team-Up <span class="text-[color:var(--accent)]">Explorer.</span><br/>
+          Map-aware <span class="text-[color:var(--accent)]">picks.</span>
+        </h1>
+        <p class="mt-5 text-lg text-[color:var(--fg-muted)] leading-relaxed max-w-xl">
+          Built for Marvel Rivals — patch-aware, mobile-first, queue-tested. Discover the team-ups that win matches and the heroes that win maps.
+        </p>
+        <div class="mt-7 flex flex-wrap gap-3">
+          <a
+            href="/team-ups/"
+            class="inline-flex items-center gap-2 px-5 py-3 rounded-md bg-[color:var(--accent)] text-[color:var(--color-panel-900)] font-semibold hover:bg-[color:var(--accent-soft)] transition-colors"
+          >
+            Explore Team-Ups
+            <span class="display text-lg leading-none">→</span>
+          </a>
+          <a
+            href="/maps/"
+            class="inline-flex items-center gap-2 px-5 py-3 rounded-md border border-[color:var(--border)] text-[color:var(--fg)] hover:border-[color:color-mix(in_oklab,var(--accent)_60%,transparent)] transition-colors"
+          >
+            Map picks
+          </a>
+        </div>
+
+        <div class="mt-8 flex flex-wrap gap-6 text-sm text-[color:var(--fg-muted)]">
+          <div>
+            <div class="stat-num text-3xl text-[color:var(--fg)]">{heroCount}</div>
+            <div class="text-xs uppercase tracking-widest text-[color:var(--fg-dim)] mt-1">Heroes</div>
+          </div>
+          <div>
+            <div class="stat-num text-3xl text-[color:var(--fg)]">{teamUpCount}</div>
+            <div class="text-xs uppercase tracking-widest text-[color:var(--fg-dim)] mt-1">Team-Ups</div>
+          </div>
+          <div>
+            <div class="stat-num text-3xl text-[color:var(--fg)]">{mapCount}</div>
+            <div class="text-xs uppercase tracking-widest text-[color:var(--fg-dim)] mt-1">Active Maps</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Featured team-up card stack */}
+      <div class="space-y-3">
+        <div class="text-xs uppercase tracking-widest text-[color:var(--fg-dim)] font-semibold">
+          Top-tier team-ups · S7.5
+        </div>
+        {
+          featuredTeamUps.map((tu) => {
+            const anchor = heroById(tu.anchor);
+            return (
+              <a
+                href={`/team-ups/${tu.id}/`}
+                class="card-panel block p-4 hover:border-[color:color-mix(in_oklab,var(--accent)_45%,transparent)] transition-colors"
+              >
+                <div class="flex items-start gap-3">
+                  <span class={`chip ${tu.tier === 'S' ? 'chip-warn' : 'chip-accent'}`}>{tu.tier}</span>
+                  <div class="flex-1 min-w-0">
+                    <div class="display text-xl uppercase tracking-tight text-[color:var(--fg)]">
+                      {tu.name}
+                    </div>
+                    <div class="text-xs text-[color:var(--fg-dim)] mt-1">
+                      {anchor?.name ?? tu.anchor} <span class="text-[color:var(--fg-muted)]">+ {tu.secondaries.length} {tu.secondaries.length === 1 ? 'hero' : 'heroes'}</span>
+                    </div>
+                    <p class="text-sm text-[color:var(--fg-muted)] mt-2 leading-snug line-clamp-2">
+                      {tu.ability}
+                    </p>
+                  </div>
+                </div>
+              </a>
+            );
+          })
+        }
+      </div>
+    </div>
+  </section>
+
+  <div class="kapow-divider container-wide" />
+
+  {/* 4-tool strip */}
+  <section class="container-wide py-10">
+    <h2 class="display text-2xl md:text-3xl uppercase tracking-tight mb-6">Tools</h2>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <a href="/team-ups/" class="card p-5 hover:border-[color:color-mix(in_oklab,var(--accent)_50%,transparent)] transition-colors group">
+        <div class="text-3xl">⚡</div>
+        <div class="display text-lg uppercase mt-3 text-[color:var(--fg)] group-hover:text-[color:var(--accent)]">Team-Up Explorer</div>
+        <p class="mt-2 text-sm text-[color:var(--fg-muted)]">Filter by anchor, role, or map. Find the synergy that wins your queue.</p>
+      </a>
+      <a href="/maps/" class="card p-5 hover:border-[color:color-mix(in_oklab,var(--accent)_50%,transparent)] transition-colors group">
+        <div class="text-3xl">🗺</div>
+        <div class="display text-lg uppercase mt-3 text-[color:var(--fg)] group-hover:text-[color:var(--accent)]">Map Picks</div>
+        <p class="mt-2 text-sm text-[color:var(--fg-muted)]">Per-map role balance + hero recs. {mapCount} active maps.</p>
+      </a>
+      <a href="/counter/" class="card p-5 hover:border-[color:color-mix(in_oklab,var(--accent)_50%,transparent)] transition-colors group">
+        <div class="text-3xl">⚔</div>
+        <div class="display text-lg uppercase mt-3 text-[color:var(--fg)] group-hover:text-[color:var(--accent)]">Counter Picker</div>
+        <p class="mt-2 text-sm text-[color:var(--fg-muted)]">Counter heroes plus the Team-Up that breaks the matchup.</p>
+      </a>
+      <a href="/heroes/" class="card p-5 hover:border-[color:color-mix(in_oklab,var(--accent)_50%,transparent)] transition-colors group">
+        <div class="text-3xl">🦸</div>
+        <div class="display text-lg uppercase mt-3 text-[color:var(--fg)] group-hover:text-[color:var(--accent)]">Heroes</div>
+        <p class="mt-2 text-sm text-[color:var(--fg-muted)]">{heroCount} hero pages — counters, team-ups, best maps.</p>
+      </a>
+    </div>
+  </section>
+
+  {/* Latest patch teaser */}
+  {
+    latest && (
+      <section class="container-wide py-10">
+        <div class="flex items-end justify-between mb-5">
+          <h2 class="display text-2xl md:text-3xl uppercase tracking-tight">Latest patch</h2>
+          <a href="/patches/" class="text-sm text-[color:var(--accent)] hover:text-[color:var(--accent-soft)]">All patches →</a>
+        </div>
+        <div class="card-panel p-6">
+          <div class="flex flex-wrap items-center gap-3 mb-3">
+            <span class="chip chip-accent">{latest.season}</span>
+            <span class="display text-xl uppercase text-[color:var(--fg)]">{latest.codename}</span>
+            <span class="ml-auto text-xs text-[color:var(--fg-dim)] uppercase tracking-widest">{latest.date}</span>
+          </div>
+          <ul class="grid md:grid-cols-2 gap-3 text-sm">
+            {
+              latest.highlights.slice(0, 4).map((h) => (
+                <li class="flex gap-3">
+                  <span class="text-[color:var(--accent)] mt-0.5">▸</span>
+                  <div>
+                    <div class="font-medium text-[color:var(--fg)]">{h.name}</div>
+                    <div class="text-[color:var(--fg-muted)] mt-0.5">{h.blurb}</div>
+                  </div>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </section>
+    )
+  }
+</BaseLayout>

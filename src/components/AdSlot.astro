@@ -1,0 +1,44 @@
+---
+import { ADSENSE_CLIENT } from '@/consts';
+
+interface Props {
+  /** AdSense ad slot ID. Empty = render placeholder only. */
+  slot?: string;
+  /** Visual placeholder height when ads disabled (px). */
+  minHeight?: number;
+  /** Layout hint (display, in-article, etc). */
+  layout?: 'display' | 'in-article';
+  label?: string;
+}
+
+const { slot = '', minHeight = 90, layout = 'display', label = 'Sponsored' } = Astro.props;
+const enabled = !!ADSENSE_CLIENT && !!slot;
+---
+
+{
+  enabled ? (
+    <div class="my-6 mx-auto text-center">
+      <div class="text-[10px] uppercase tracking-widest text-[color:var(--fg-dim)] mb-1">{label}</div>
+      <ins
+        class="adsbygoogle"
+        style={`display:block; min-height:${minHeight}px;`}
+        data-ad-client={ADSENSE_CLIENT}
+        data-ad-slot={slot}
+        data-ad-format={layout === 'in-article' ? 'fluid' : 'auto'}
+        data-full-width-responsive="true"
+      />
+      <script
+        is:inline
+        set:html={`(adsbygoogle = window.adsbygoogle || []).push({});`}
+      />
+    </div>
+  ) : (
+    <div
+      aria-hidden="true"
+      class="my-6 mx-auto rounded-lg border border-dashed border-[color:var(--border)] grid place-items-center text-xs text-[color:var(--fg-dim)]"
+      style={`min-height:${minHeight}px;`}
+    >
+      ad slot · disabled until ADSENSE_CLIENT is set in src/consts.ts
+    </div>
+  )
+}

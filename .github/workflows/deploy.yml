@@ -1,0 +1,51 @@
+name: Deploy to Cloudflare Pages
+
+# Triggers:
+#   - push to main branch (auto-deploy)
+#   - manual workflow_dispatch (re-deploy without committing)
+#
+# Required secrets (set under Repo → Settings → Secrets and variables → Actions):
+#   CLOUDFLARE_API_TOKEN  — create at dash.cloudflare.com/profile/api-tokens
+#                            with the "Cloudflare Pages — Edit" template
+#   CLOUDFLARE_ACCOUNT_ID — your Cloudflare account ID (right sidebar of dashboard)
+#
+# Set the project name below to match the Cloudflare Pages project you created.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  deployments: write
+
+env:
+  CF_PROJECT_NAME: rivalslab # Cloudflare Pages project name — must match the project you create in CF dashboard
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    name: Build + deploy to Cloudflare Pages
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build site
+        run: npm run build
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=${{ env.CF_PROJECT_NAME }} --branch=main

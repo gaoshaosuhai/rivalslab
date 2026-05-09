@@ -1,0 +1,96 @@
+---
+import {
+  SITE_URL,
+  SITE_NAME,
+  SITE_DESCRIPTION,
+  SITE_LOCALE,
+  SITE_TWITTER,
+  ADSENSE_CLIENT,
+  PLAUSIBLE_DOMAIN,
+} from '@/consts';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description = SITE_DESCRIPTION,
+  image = '/og-default.svg',
+  type = 'website',
+  noindex = false,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site ?? SITE_URL).toString();
+const ogImage = new URL(image, Astro.site ?? SITE_URL).toString();
+const fullTitle = title === SITE_NAME ? title : `${title} · ${SITE_NAME}`;
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="generator" content={Astro.generator} />
+
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+{noindex && <meta name="robots" content="noindex,nofollow" />}
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="alternate" type="application/rss+xml" title={SITE_NAME} href="/rss.xml" />
+<link rel="sitemap" href="/sitemap-index.xml" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" />
+
+<!-- Open Graph -->
+<meta property="og:site_name" content={SITE_NAME} />
+<meta property="og:type" content={type} />
+<meta property="og:url" content={canonical} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:locale" content={SITE_LOCALE} />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+{SITE_TWITTER && <meta name="twitter:site" content={SITE_TWITTER} />}
+
+<!-- JSON-LD WebSite -->
+<script
+  type="application/ld+json"
+  is:inline
+  set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: SITE_NAME,
+    url: SITE_URL,
+    description: SITE_DESCRIPTION,
+  })}
+/>
+
+<meta name="theme-color" content="#0B0B0F" />
+
+{
+  ADSENSE_CLIENT && (
+    <script
+      is:inline
+      async
+      src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`}
+      crossorigin="anonymous"
+    />
+  )
+}
+
+{
+  PLAUSIBLE_DOMAIN && (
+    <script is:inline defer data-domain={PLAUSIBLE_DOMAIN} src="https://plausible.io/js/script.js" />
+  )
+}

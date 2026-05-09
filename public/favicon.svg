@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <pattern id="ht" x="0" y="0" width="6" height="6" patternUnits="userSpaceOnUse">
+      <circle cx="3" cy="3" r="0.7" fill="#FFD60A" fill-opacity="0.18"/>
+    </pattern>
+  </defs>
+  <rect width="64" height="64" rx="12" fill="#0B0B0F"/>
+  <rect width="64" height="64" rx="12" fill="url(#ht)"/>
+  <!-- Lightning bolt — Energy Yellow on Fissure Black, comic-action diagonal. -->
+  <path d="M40 6 L18 32 L29 32 L22 58 L46 30 L33 30 Z"
+        fill="#FFD60A"
+        stroke="#0B0B0F" stroke-width="1.2" stroke-linejoin="round"/>
+</svg>

@@ -1,0 +1,85 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { HEROES, type Hero, roleClass } from '@/data/heroes';
+import { teamUpsForHero } from '@/data/team-ups';
+import { MAPS } from '@/data/maps';
+
+export async function getStaticPaths() {
+  return HEROES.map((h) => ({ params: { id: h.id }, props: { hero: h } }));
+}
+
+interface Props { hero: Hero; }
+const { hero } = Astro.props;
+
+const teamUps = teamUpsForHero(hero.id);
+const heroMaps = MAPS.filter((m) => m.topHeroes.includes(hero.id));
+const description = `${hero.name} — ${hero.role} guide for Marvel Rivals. ${hero.blurb}`;
+---
+
+<BaseLayout title={`${hero.name} — ${hero.role} guide`} description={description}>
+  <article class="container-narrow py-10 md:py-14">
+    <div class="text-xs uppercase tracking-widest text-[color:var(--fg-dim)] mb-3">
+      <a href="/heroes/" class="hover:text-[color:var(--accent)]">Heroes</a> /
+      <span class="text-[color:var(--fg-muted)]">{hero.name}</span>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-2 mb-4">
+      <span class={`chip ${hero.tier === 'S' ? 'chip-warn' : 'chip-accent'}`}>Tier {hero.tier}</span>
+      <span class={`chip ${roleClass(hero.role)}`} style={`border-color:currentColor;color:currentColor;background:color-mix(in oklab, currentColor 14%, transparent)`}>{hero.role}</span>
+      <span class="chip chip-muted">{hero.difficulty}</span>
+      <span class="chip chip-muted">Added: {hero.introduced}</span>
+    </div>
+
+    <h1 class="display-tight text-5xl md:text-6xl uppercase tracking-tight">{hero.name}</h1>
+    <p class="mt-3 text-lg text-[color:var(--fg-muted)]">{hero.blurb}</p>
+
+    <section class="mt-8 card-panel p-6">
+      <div class="text-xs uppercase tracking-widest text-[color:var(--accent)] font-semibold">Signature</div>
+      <div class="display text-2xl uppercase mt-2">{hero.signature}</div>
+    </section>
+
+    {teamUps.length > 0 && (
+      <section class="mt-10">
+        <h2 class="display text-2xl uppercase tracking-tight mb-4">Team-Ups featuring {hero.name}</h2>
+        <div class="grid sm:grid-cols-2 gap-3">
+          {teamUps.map((tu) => (
+            <a href={`/team-ups/${tu.id}/`} class="card p-4 hover:border-[color:color-mix(in_oklab,var(--accent)_45%,transparent)] transition-colors">
+              <div class="flex items-start gap-2">
+                <span class={`chip ${tu.tier === 'S' ? 'chip-warn' : 'chip-accent'}`}>{tu.tier}</span>
+                <span class="text-xs text-[color:var(--fg-dim)] uppercase tracking-widest">
+                  {tu.anchor === hero.id ? 'Anchor' : 'Secondary'}
+                </span>
+              </div>
+              <div class="display text-xl uppercase mt-2 text-[color:var(--fg)]">{tu.name}</div>
+              <p class="text-sm text-[color:var(--fg-muted)] mt-2">{tu.ability}</p>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    {heroMaps.length > 0 && (
+      <section class="mt-10">
+        <h2 class="display text-2xl uppercase tracking-tight mb-4">Best maps for {hero.name}</h2>
+        <div class="grid sm:grid-cols-2 gap-3">
+          {heroMaps.map((m) => (
+            <a href={`/maps/${m.id}/`} class="card p-4 hover:border-[color:color-mix(in_oklab,var(--accent)_45%,transparent)] transition-colors">
+              <div class="display text-lg uppercase text-[color:var(--fg)]">{m.name}</div>
+              <div class="text-xs uppercase tracking-widest text-[color:var(--fg-dim)] mt-1">{m.mode}</div>
+              <p class="text-sm text-[color:var(--fg-muted)] mt-2">{m.notes}</p>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <section class="mt-10 card p-6">
+      <h2 class="display text-xl uppercase tracking-tight mb-2">Should you main {hero.name}?</h2>
+      <p class="text-[color:var(--fg-muted)] leading-relaxed">
+        {hero.name} is a <strong class="text-[color:var(--fg)]">{hero.difficulty.toLowerCase()}-difficulty</strong>
+        {' '}{hero.role.toLowerCase()} sitting at <strong class="text-[color:var(--fg)]">Tier {hero.tier}</strong>
+        {' '}in the current snapshot. {teamUps.length > 0 && `${hero.name} participates in ${teamUps.length} active Team-Up${teamUps.length === 1 ? '' : 's'} — that's where the carry potential lives.`}
+      </p>
+    </section>
+  </article>
+</BaseLayout>

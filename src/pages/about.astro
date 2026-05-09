@@ -1,0 +1,50 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { SITE_NAME, CONTACT_EMAIL } from '@/consts';
+---
+
+<BaseLayout
+  title="About"
+  description={`About ${SITE_NAME} — independent fan tool for Marvel Rivals.`}
+>
+  <section class="container-narrow py-12 md:py-16 max-w-3xl">
+    <h1 class="display-tight text-4xl md:text-5xl uppercase tracking-tight">About {SITE_NAME}</h1>
+
+    <h2 class="display text-2xl uppercase tracking-tight mt-10">What this is</h2>
+    <p class="mt-3 text-[color:var(--fg-muted)] leading-relaxed">
+      {SITE_NAME} is an independent fan tool for Marvel Rivals. We focus on the gaps existing trackers ignore:
+      a real <strong class="text-[color:var(--fg)]">Team-Up Synergy explorer</strong> (named in-game mechanics, not opaque
+      win-rate weights), <strong class="text-[color:var(--fg)]">map-aware hero picks</strong>, and a
+      <strong class="text-[color:var(--fg)]">counter framework</strong> that names the Team-Up that breaks the matchup —
+      not just the hero swap. Built mobile-first because half the audience is checking us on a phone during queue.
+    </p>
+
+    <h2 class="display text-2xl uppercase tracking-tight mt-10">Editorial standards</h2>
+    <ul class="mt-3 space-y-2 text-[color:var(--fg-muted)] leading-relaxed">
+      <li>· We cite sources for every patch update — official NetEase bulletins, dot esports, marvelrivals.gg, beebom for community-tracked changes.</li>
+      <li>· Tier judgments are our own opinion — clearly marked as editorial, not consensus.</li>
+      <li>· We do not republish patch notes verbatim; we summarize with attribution and link the source.</li>
+      <li>· No automation, macros, or TOS-violating advice. We aim to help you climb, not get banned.</li>
+      <li>· Each data file declares a <code class="text-[color:var(--accent)]">LAST_REVIEWED</code> date. The footer surfaces the oldest. If we go dark for more than 60 days, the homepage flags it.</li>
+    </ul>
+
+    <h2 class="display text-2xl uppercase tracking-tight mt-10">Built solo + AI</h2>
+    <p class="mt-3 text-[color:var(--fg-muted)] leading-relaxed">
+      {SITE_NAME} is run by a solo operator with AI-assisted content generation. Every hero, team-up, and map entry is
+      reviewed before publication — we don't auto-publish unverified data. New patches typically reflected within 48
+      hours of release.
+    </p>
+
+    <h2 class="display text-2xl uppercase tracking-tight mt-10">Contact</h2>
+    <p class="mt-3 text-[color:var(--fg-muted)] leading-relaxed">
+      Email: <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>. Patch corrections, takedowns, sponsorships — same address.
+    </p>
+
+    <h2 class="display text-2xl uppercase tracking-tight mt-10">Trademarks</h2>
+    <p class="mt-3 text-[color:var(--fg-muted)] leading-relaxed text-sm">
+      Marvel Rivals and all hero names, ability names, map names, and related assets are trademarks of NetEase Games and
+      Marvel Games. {SITE_NAME} is an independent fan tool and is not affiliated with, endorsed by, or sponsored by
+      NetEase or Marvel.
+    </p>
+  </section>
+</BaseLayout>

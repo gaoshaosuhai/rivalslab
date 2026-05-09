@@ -1,0 +1,69 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { HEROES, ROLES_ORDER, roleClass } from '@/data/heroes';
+import type { Hero } from '@/data/heroes';
+
+const TIERS: Array<{ key: 'S' | 'A' | 'B' | 'C'; label: string; blurb: string }> = [
+  { key: 'S', label: 'S — meta-defining', blurb: 'Pick or ban. Warps the draft.' },
+  { key: 'A', label: 'A — strong', blurb: 'Reliable carry potential in the right comp.' },
+  { key: 'B', label: 'B — situational', blurb: 'Map / matchup dependent.' },
+  { key: 'C', label: 'C — niche', blurb: 'Specific tech only — not a flex pick.' },
+];
+
+const byTier = TIERS.map((t) => ({
+  ...t,
+  heroes: HEROES.filter((h) => h.tier === t.key).sort((a, b) => a.name.localeCompare(b.name)),
+}));
+---
+
+<BaseLayout
+  title="Marvel Rivals tier list — current snapshot"
+  description="Marvel Rivals hero tier list grouped by S / A / B / C. Snapshot updated each patch."
+>
+  <section class="container-wide pt-10 pb-6">
+    <div class="text-xs uppercase tracking-widest text-[color:var(--fg-dim)] mb-3">
+      Tools / <span class="text-[color:var(--fg-muted)]">Tier list</span>
+    </div>
+    <h1 class="display-tight text-4xl md:text-6xl uppercase tracking-tight">
+      Tier <span class="text-[color:var(--accent)]">List</span>
+    </h1>
+    <p class="mt-3 text-lg text-[color:var(--fg-muted)] max-w-3xl leading-relaxed">
+      Current Marvel Rivals hero tier snapshot. Editorial — refined each patch. Tier alone isn't a draft strategy; pair with the <a href="/team-ups/" class="text-[color:var(--accent)] hover:text-[color:var(--accent-soft)]">Team-Up Explorer</a> before locking your queue.
+    </p>
+  </section>
+
+  <section class="container-wide pb-16 space-y-6">
+    {
+      byTier.map((t) => (
+        <div class="card-panel p-5">
+          <div class="flex items-start gap-4 mb-4">
+            <div
+              class={`shrink-0 grid place-items-center w-14 h-14 rounded-md display text-3xl ${
+                t.key === 'S' ? 'bg-[color:var(--warn)] text-[color:var(--color-panel-900)]'
+                  : t.key === 'A' ? 'bg-[color:var(--accent)] text-[color:var(--color-panel-900)]'
+                    : 'bg-[color:var(--bg-soft)] text-[color:var(--fg)] border border-[color:var(--border)]'
+              }`}
+            >{t.key}</div>
+            <div>
+              <div class="display text-xl uppercase tracking-tight">{t.label}</div>
+              <div class="text-sm text-[color:var(--fg-muted)] mt-1">{t.blurb}</div>
+            </div>
+          </div>
+          <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+            {t.heroes.map((h: Hero) => (
+              <a
+                href={`/heroes/${h.id}/`}
+                class="flex items-center gap-2 p-2 rounded-md border border-[color:var(--border)] hover:border-[color:color-mix(in_oklab,var(--accent)_45%,transparent)] transition-colors"
+              >
+                <span class={`text-xs uppercase tracking-widest ${roleClass(h.role)}`}>
+                  {h.role.charAt(0)}
+                </span>
+                <span class="text-sm font-medium text-[color:var(--fg)]">{h.name}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      ))
+    }
+  </section>
+</BaseLayout>

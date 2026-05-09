@@ -1,0 +1,84 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { SITE_NAME, CONTACT_EMAIL, ADSENSE_CLIENT, PLAUSIBLE_DOMAIN } from '@/consts';
+
+const effectiveDate = '2026-05-09';
+---
+
+<BaseLayout
+  title="Privacy Policy"
+  description={`Privacy policy for ${SITE_NAME}.`}
+>
+  <section class="container-narrow py-12 md:py-16 max-w-3xl">
+    <h1 class="display-tight text-4xl md:text-5xl uppercase tracking-tight">Privacy Policy</h1>
+    <p class="mt-2 text-xs text-[color:var(--fg-dim)] uppercase tracking-widest">
+      Effective {effectiveDate}
+    </p>
+
+    <h2 class="display text-2xl uppercase tracking-tight mt-10">Overview</h2>
+    <p class="mt-3 text-[color:var(--fg-muted)] leading-relaxed">
+      {SITE_NAME} ("the site") is an independent fan tool for Marvel Rivals. This policy explains what data we
+      collect, how it's used, and your rights.
+    </p>
+
+    <h2 class="display text-2xl uppercase tracking-tight mt-10">Data we collect</h2>
+    <p class="mt-3 text-[color:var(--fg-muted)] leading-relaxed">
+      We collect minimal aggregate data — page views and approximate region — for the purpose of improving the
+      site. We do NOT collect personally identifiable information directly.
+    </p>
+
+    <h3 class="display text-lg uppercase tracking-tight mt-6">Browser storage (localStorage)</h3>
+    <p class="mt-2 text-[color:var(--fg-muted)] leading-relaxed text-sm">
+      Some interactive tools (filter preferences, picker selections) store your choices in your browser's
+      localStorage. This data NEVER leaves your device. Clearing your browser cache clears it.
+    </p>
+
+    {
+      PLAUSIBLE_DOMAIN && (
+        <>
+          <h3 class="display text-lg uppercase tracking-tight mt-6">Analytics</h3>
+          <p class="mt-2 text-[color:var(--fg-muted)] leading-relaxed text-sm">
+            We use Plausible Analytics — a privacy-first tool that does not use cookies or collect personal data.
+            Aggregated page-view data only.
+          </p>
+        </>
+      )
+    }
+
+    {
+      ADSENSE_CLIENT && (
+        <>
+          <h3 class="display text-lg uppercase tracking-tight mt-6">Advertising</h3>
+          <p class="mt-2 text-[color:var(--fg-muted)] leading-relaxed text-sm">
+            We display ads via Google AdSense. Google may use cookies to serve ads based on your prior visits to
+            this and other websites. You can opt out at{' '}
+            <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener">
+              Google's ad personalization page
+            </a>.
+          </p>
+        </>
+      )
+    }
+
+    <h2 class="display text-2xl uppercase tracking-tight mt-10">Third-party services</h2>
+    <ul class="mt-3 space-y-2 text-[color:var(--fg-muted)] leading-relaxed">
+      <li>· <strong class="text-[color:var(--fg)]">Cloudflare Pages</strong> — hosts and serves the site. Cloudflare's privacy policy applies.</li>
+      <li>· <strong class="text-[color:var(--fg)]">Google Fonts</strong> — typography served via fonts.googleapis.com.</li>
+      {ADSENSE_CLIENT && <li>· <strong class="text-[color:var(--fg)]">Google AdSense</strong> — ad serving.</li>}
+      {PLAUSIBLE_DOMAIN && <li>· <strong class="text-[color:var(--fg)]">Plausible Analytics</strong> — privacy-first traffic measurement.</li>}
+    </ul>
+
+    <h2 class="display text-2xl uppercase tracking-tight mt-10">Your rights</h2>
+    <p class="mt-3 text-[color:var(--fg-muted)] leading-relaxed">
+      You can clear your browser data at any time to remove all locally-stored preferences. You can opt out of
+      advertising personalization at the link above. For other questions, contact{' '}
+      <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
+    </p>
+
+    <h2 class="display text-2xl uppercase tracking-tight mt-10">Changes</h2>
+    <p class="mt-3 text-[color:var(--fg-muted)] leading-relaxed">
+      We may update this policy when we add features (e.g., enable ads). The effective date above will change.
+      Material changes will be flagged on the homepage.
+    </p>
+  </section>
+</BaseLayout>

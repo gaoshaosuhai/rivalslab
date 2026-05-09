@@ -1,0 +1,64 @@
+name: Monthly maintenance reminder
+
+# Opens a GitHub issue on the 1st of each month with the maintenance checklist.
+# Designed for solo maintainers — keeps the cadence visible without external tools.
+
+on:
+  schedule:
+    # 09:00 UTC on the 1st of every month — pick a time you'll see it.
+    - cron: '0 9 1 * *'
+  workflow_dispatch:
+    # Allow manual trigger for testing.
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  open-reminder:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Open monthly checklist issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const today = new Date().toISOString().slice(0, 10);
+            const month = new Date().toLocaleString('en-US', { month: 'long', year: 'numeric' });
+
+            const body = `Monthly data + content review for **${month}**.
+
+            ## Per-patch updates (only if a new patch shipped this month)
+
+            - [ ] **\`src/consts.ts\`** — bump SOURCE_VERSION / TARGET_VERSION / SNAPSHOT_DATE
+            - [ ] **\`src/data/patches.ts\`** — move shipped FORECAST → TARGET_PATCHES, add new SOURCE_PATCHES entry
+            - [ ] **\`src/data/codes.ts\`** — refresh active codes
+            - [ ] **\`src/data/events.ts\`** — refresh active events
+            - [ ] Update entity / boss / region data files for any patch-changed entries
+            - [ ] Bump \`LAST_REVIEWED\` on EVERY data file you touched
+
+            ## Quarterly content checks
+
+            - [ ] Verify all interactive tools work (planner, calculator, picker)
+            - [ ] Re-skim 2-3 competitor sites; retune tier judgments if community consensus shifted
+            - [ ] Lighthouse spot-check homepage — perf + SEO ≥ 95
+
+            ## Ship
+
+            - [ ] \`npm run build\` clean (zero warnings)
+            - [ ] \`git push origin main\` — GitHub Actions auto-deploys to Cloudflare Pages
+            - [ ] Spot-check live site
+
+            ## When to escalate
+
+            If you're more than 60 days past the last \`LAST_REVIEWED\` bump, do an emergency catch-up
+            review OR add a hiatus banner to the homepage. See OPERATE.md.
+
+            _Auto-generated on ${today}_`;
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `Maintenance review — ${month}`,
+              body: body,
+              labels: ['maintenance', 'monthly'],
+            });

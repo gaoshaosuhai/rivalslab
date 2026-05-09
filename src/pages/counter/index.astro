@@ -1,0 +1,102 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { HEROES, heroesByRole, roleClass } from '@/data/heroes';
+import { TEAM_UPS } from '@/data/team-ups';
+
+// Intuitive counter framework — role × playstyle leans, refined per archetype.
+// V1: pattern-based, not match-data-driven. V2 will incorporate live win-rate
+// counters once we have a data partnership or scrape pipeline.
+const COUNTER_PATTERNS: Array<{ archetype: string; counters: string[]; counteredBy: string[]; note: string }> = [
+  {
+    archetype: 'Hitscan precision (Hela, Hawkeye, Black Widow, Punisher)',
+    counters: ['exposed Strategists', 'slow Vanguards (Hulk, Groot)'],
+    counteredBy: ['dive Duelists (Iron Fist, Spider-Man, Black Panther)', 'shield Vanguards (Doctor Strange, Magneto)'],
+    note: 'Bestial Hunt with Daredevil + Punisher inverts the long-sightline matchup — blind grenades close their windows.',
+  },
+  {
+    archetype: 'Dive Duelist (Iron Fist, Spider-Man, Black Panther, Magik)',
+    counters: ['hitscan Duelists', 'isolated Strategists'],
+    counteredBy: ['CC Strategist (Mantis, Loki)', 'reflect/shield Team-Ups (Lucky Loan)'],
+    note: 'S7.5 Lucky Loan reflective shield is the headline counter — Cap + Black Cat + White Fox returns dive damage.',
+  },
+  {
+    archetype: 'Brawl Vanguard (Hulk, Venom, Captain America, Thor)',
+    counters: ['squishy backlines', 'isolated tanks (mirror)'],
+    counteredBy: ['burst Duelists (Wolverine, Iron Man)', 'CC Strategist + sustain'],
+    note: 'Wolverine\'s Berserker Rage is the cleanest counter to the brawl mirror — he tank-shreds through Hulk\'s armor.',
+  },
+  {
+    archetype: 'Sustain Strategist (Luna Snow, Cloak & Dagger, Mantis)',
+    counters: ['burst comps without ult-trade', 'extended brawls'],
+    counteredBy: ['dive Duelists', 'Hela ult chain'],
+    note: 'Universal pick. Drafting two of these means you out-sustain any non-dive comp.',
+  },
+  {
+    archetype: 'Backline projector (Iron Man, Storm)',
+    counters: ['ground-bound brawls'],
+    counteredBy: ['hitscan (Hela, Hawkeye, Punisher)', 'air-denial Vanguards (Magneto shield)'],
+    note: 'Symbiote Bond + Spider-Man flanks shut down sky-anchored Iron Man before they ult.',
+  },
+];
+
+const description = 'Counter-pick framework for Marvel Rivals — archetype matchups plus the Team-Up that breaks the matchup. V1 release.';
+---
+
+<BaseLayout title="Counter Picker — Marvel Rivals" description={description}>
+  <section class="container-wide pt-10 pb-6">
+    <div class="text-xs uppercase tracking-widest text-[color:var(--fg-dim)] mb-3">
+      Tools / <span class="text-[color:var(--fg-muted)]">Counter Picker</span>
+    </div>
+    <h1 class="display-tight text-4xl md:text-6xl uppercase tracking-tight">
+      Counter <span class="text-[color:var(--accent)]">Picker</span>
+    </h1>
+    <p class="mt-3 text-lg text-[color:var(--fg-muted)] max-w-3xl leading-relaxed">
+      Archetype-level counters with the Team-Up that breaks the matchup. The framework competitors miss — lock in the synergy that flips the fight, not just the hero swap.
+    </p>
+    <div class="mt-3 chip chip-cosmic">V1 — refining with live win-rate data in V2</div>
+  </section>
+
+  <section class="container-wide pb-12">
+    <div class="grid md:grid-cols-2 gap-4">
+      {
+        COUNTER_PATTERNS.map((p) => (
+          <div class="card-panel p-5">
+            <h3 class="display text-xl uppercase tracking-tight text-[color:var(--fg)]">{p.archetype}</h3>
+            <div class="mt-4 grid grid-cols-2 gap-3 text-sm">
+              <div>
+                <div class="text-xs uppercase tracking-widest text-[color:var(--accent)] font-semibold mb-1.5">Counters</div>
+                <ul class="space-y-1 text-[color:var(--fg-muted)]">
+                  {p.counters.map((c) => <li>· {c}</li>)}
+                </ul>
+              </div>
+              <div>
+                <div class="text-xs uppercase tracking-widest text-[color:var(--warn)] font-semibold mb-1.5">Countered by</div>
+                <ul class="space-y-1 text-[color:var(--fg-muted)]">
+                  {p.counteredBy.map((c) => <li>· {c}</li>)}
+                </ul>
+              </div>
+            </div>
+            <p class="mt-4 text-sm text-[color:var(--fg)] border-t border-[color:var(--border)] pt-3 leading-relaxed">
+              <strong class="text-[color:var(--accent)]">Team-Up tech:</strong> {p.note}
+            </p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="container-wide pb-16">
+    <div class="card p-6 max-w-3xl">
+      <h2 class="display text-xl uppercase tracking-tight mb-3">How to use this</h2>
+      <p class="text-[color:var(--fg-muted)] leading-relaxed">
+        Identify the enemy team's <strong class="text-[color:var(--fg)]">archetype</strong> in the first 30 seconds — what
+        kit are they snowballing on? Then check the matchup matrix above. The "Team-Up tech" line names the synergy that
+        flips the matchup at draft phase. Counter-picking the hero is the table-stakes move; counter-picking the
+        Team-Up is the win.
+      </p>
+      <div class="mt-4 text-sm">
+        <a href="/team-ups/" class="text-[color:var(--accent)] hover:text-[color:var(--accent-soft)]">Browse all {TEAM_UPS.length} Team-Ups →</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

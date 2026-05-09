@@ -1,0 +1,104 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { TARGET_PATCHES, UPCOMING, patchesBySeasonReverse } from '@/data/patches';
+
+const patches = patchesBySeasonReverse();
+const upcoming = UPCOMING;
+---
+
+<BaseLayout
+  title="Patches — Marvel Rivals tier deltas"
+  description="Marvel Rivals patch feed with Team-Up tier shifts, hero balance changes, and map meta deltas. Updated each patch."
+>
+  <section class="container-wide pt-10 pb-6">
+    <div class="text-xs uppercase tracking-widest text-[color:var(--fg-dim)] mb-3">
+      Tools / <span class="text-[color:var(--fg-muted)]">Patches</span>
+    </div>
+    <h1 class="display-tight text-4xl md:text-6xl uppercase tracking-tight">
+      Patch <span class="text-[color:var(--accent)]">Diff</span>
+    </h1>
+    <p class="mt-3 text-lg text-[color:var(--fg-muted)] max-w-3xl leading-relaxed">
+      Reverse-chronological feed of Marvel Rivals patches with Team-Up tier shifts and meta deltas. Sourced from official NetEase bulletins.
+    </p>
+  </section>
+
+  {upcoming.length > 0 && (
+    <section class="container-wide pb-10">
+      <h2 class="display text-2xl uppercase tracking-tight mb-4">Upcoming</h2>
+      <div class="space-y-4">
+        {
+          upcoming.map((u) => (
+            <div class="card-panel p-5">
+              <div class="flex flex-wrap items-center gap-2 mb-3">
+                <span class="chip chip-accent">{u.targetVersion}</span>
+                <span class="chip chip-warn">{u.confidence} confidence</span>
+                <span class="ml-auto text-xs text-[color:var(--fg-dim)] uppercase tracking-widest">
+                  Window: {u.windowStart} – {u.windowEnd}
+                </span>
+              </div>
+              <div class="display text-2xl uppercase tracking-tight">{u.codename}</div>
+              <ul class="mt-4 space-y-2 text-sm">
+                {u.highlights.map((h) => (
+                  <li class="flex gap-2">
+                    <span class="text-[color:var(--accent)] mt-0.5">▸</span>
+                    <div>
+                      <div class="font-medium text-[color:var(--fg)]">{h.name}</div>
+                      <div class="text-[color:var(--fg-muted)] mt-0.5">{h.blurb}</div>
+                      {h.prepHint && (
+                        <div class="text-[color:var(--fg-dim)] mt-1 text-xs italic">Prep: {h.prepHint}</div>
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+              {u.prepRecap.length > 0 && (
+                <div class="mt-4 pt-3 border-t border-[color:var(--border)]">
+                  <div class="text-xs uppercase tracking-widest text-[color:var(--accent)] font-semibold mb-2">Prep checklist</div>
+                  <ul class="space-y-1 text-sm text-[color:var(--fg-muted)]">
+                    {u.prepRecap.map((p) => <li>· {p}</li>)}
+                  </ul>
+                </div>
+              )}
+            </div>
+          ))
+        }
+      </div>
+    </section>
+  )}
+
+  <section class="container-wide pb-16">
+    <h2 class="display text-2xl uppercase tracking-tight mb-4">Shipped patches</h2>
+    <div class="space-y-4">
+      {
+        patches.map((p) => (
+          <div class="card p-5">
+            <div class="flex flex-wrap items-center gap-2 mb-3">
+              <span class="chip chip-muted">{p.season}</span>
+              <span class="text-xs text-[color:var(--fg-dim)] font-mono">{p.version}</span>
+              <span class="ml-auto text-xs text-[color:var(--fg-dim)] uppercase tracking-widest">{p.date}</span>
+            </div>
+            <div class="display text-xl uppercase tracking-tight">{p.codename ?? p.version}</div>
+            <ul class="mt-3 space-y-1.5 text-sm">
+              {p.highlights.map((h) => (
+                <li class="flex gap-2">
+                  <span class="text-[color:var(--accent)] mt-0.5">▸</span>
+                  <div>
+                    <span class="text-[color:var(--fg)] font-medium">{h.name}</span>
+                    <span class="text-[color:var(--fg-muted)]"> — {h.blurb}</span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            {p.sourceUrl && (
+              <div class="mt-3 text-xs">
+                <a href={p.sourceUrl} target="_blank" rel="noopener" class="text-[color:var(--fg-dim)] hover:text-[color:var(--accent)]">
+                  Source: NetEase bulletin →
+                </a>
+              </div>
+            )}
+          </div>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>

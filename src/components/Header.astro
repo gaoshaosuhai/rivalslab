@@ -1,0 +1,80 @@
+---
+import { SITE_NAME } from '@/consts';
+
+const path = Astro.url.pathname;
+
+const navItems: { href: string; label: string; hint?: string }[] = [
+  { href: '/team-ups/', label: 'Team-Ups', hint: 'Synergy explorer' },
+  { href: '/maps/', label: 'Maps', hint: 'Per-map picks' },
+  { href: '/counter/', label: 'Counter', hint: 'Counter picker' },
+  { href: '/heroes/', label: 'Heroes', hint: '49 hero pages' },
+  { href: '/patches/', label: 'Patches', hint: 'Tier deltas' },
+];
+
+function isActive(href: string) {
+  if (href === '/') return path === '/';
+  return path.startsWith(href);
+}
+---
+
+<header class="sticky top-0 z-30 backdrop-blur-md bg-[color:color-mix(in_oklab,var(--bg)_85%,transparent)] border-b border-[color:var(--border)]">
+  <div class="container-wide flex items-center justify-between py-3">
+    <a href="/" class="group flex items-center gap-2.5 hover:opacity-90">
+      <span
+        class="grid place-items-center w-9 h-9 rounded-md bg-[color:var(--accent)] text-[color:var(--color-panel-900)] display tracking-tight"
+        style="font-size:1.45rem; line-height:1;"
+      >R</span>
+      <span class="display text-[1.4rem] leading-none tracking-wide text-[color:var(--fg)] uppercase">{SITE_NAME}</span>
+    </a>
+
+    <nav class="hidden md:flex items-center gap-1 text-sm">
+      {
+        navItems.map((item) => (
+          <a
+            href={item.href}
+            class:list={[
+              'px-3 py-2 rounded-md transition-colors font-medium',
+              isActive(item.href)
+                ? 'text-[color:var(--accent)] bg-[color:color-mix(in_oklab,var(--accent)_10%,transparent)]'
+                : 'text-[color:var(--fg-muted)] hover:text-[color:var(--fg)]',
+            ]}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <button
+      type="button"
+      aria-label="Open menu"
+      class="md:hidden text-[color:var(--fg-muted)] hover:text-[color:var(--fg)] p-2"
+      onclick="document.getElementById('mobile-nav')?.classList.toggle('hidden')"
+    >
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 6h18M3 12h18M3 18h18" stroke-linecap="round" />
+      </svg>
+    </button>
+  </div>
+
+  <div id="mobile-nav" class="hidden md:hidden border-t border-[color:var(--border)]">
+    <nav class="container-wide flex flex-col py-2 text-sm">
+      {
+        navItems.map((item) => (
+          <a
+            href={item.href}
+            class:list={[
+              'px-3 py-3 rounded-md',
+              isActive(item.href)
+                ? 'text-[color:var(--accent)]'
+                : 'text-[color:var(--fg-muted)]',
+            ]}
+          >
+            <span class="font-medium">{item.label}</span>
+            {item.hint && <span class="ml-2 text-xs text-[color:var(--fg-dim)]">{item.hint}</span>}
+          </a>
+        ))
+      }
+    </nav>
+  </div>
+</header>

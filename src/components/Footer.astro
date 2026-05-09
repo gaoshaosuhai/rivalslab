@@ -1,0 +1,58 @@
+---
+import { SITE_NAME, SNAPSHOT_DATE, CONTACT_EMAIL } from '@/consts';
+
+// LAST_REVIEWED aggregation. Each data file exports its own constant.
+// As you add data files in src/data/, import them here and feed into
+// `freshnessSignal()` so the footer always shows the OLDEST review date.
+import { LAST_REVIEWED as PATCHES_LAST } from '@/data/patches';
+import { LAST_REVIEWED as EVENTS_LAST } from '@/data/events';
+import { LAST_REVIEWED as HEROES_LAST } from '@/data/heroes';
+import { LAST_REVIEWED as TEAMUPS_LAST } from '@/data/team-ups';
+import { LAST_REVIEWED as MAPS_LAST } from '@/data/maps';
+
+function freshnessSignal(): string {
+  const dates = [PATCHES_LAST, EVENTS_LAST, HEROES_LAST, TEAMUPS_LAST, MAPS_LAST].filter(Boolean);
+  if (dates.length === 0) return SNAPSHOT_DATE;
+  return dates.sort()[0]; // oldest = the freshness signal
+}
+
+const reviewedDate = freshnessSignal();
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-24 border-t border-[color:var(--border)]">
+  <div class="container-narrow py-10 grid gap-6 md:grid-cols-3 text-sm text-[color:var(--fg-muted)]">
+    <div>
+      <div class="display text-[color:var(--fg)] text-lg uppercase tracking-wide">{SITE_NAME}</div>
+      <p class="mt-2 leading-relaxed">
+        Independent fan tool. Not affiliated with NetEase or Marvel Games. Marvel Rivals and all hero, ability, and map names are trademarks of their respective owners.
+      </p>
+      <p class="mt-2 text-xs">
+        Contact: <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+      </p>
+    </div>
+
+    <div>
+      <div class="text-[color:var(--fg)] font-medium mb-2">Site</div>
+      <ul class="space-y-1.5">
+        <li><a href="/about/">About</a></li>
+        <li><a href="/privacy/">Privacy</a></li>
+        <li><a href="/terms/">Terms</a></li>
+        <li><a href="/rss.xml">RSS</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="text-[color:var(--fg)] font-medium mb-2">Freshness</div>
+      <ul class="space-y-1.5">
+        <li>Data reviewed: <time datetime={reviewedDate} class="text-[color:var(--fg)]">{reviewedDate}</time></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="border-t border-[color:var(--border)] py-4">
+    <div class="container-narrow flex flex-wrap gap-3 items-center justify-between text-xs text-[color:var(--fg-dim)]">
+      <span>© {year} {SITE_NAME}</span>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,40 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { TEAM_UPS } from '@/data/team-ups';
+import { HEROES } from '@/data/heroes';
+import TeamUpExplorer from '@/components/islands/TeamUpExplorer';
+---
+
+<BaseLayout
+  title="Team-Up Explorer — Marvel Rivals synergy guide"
+  description={`Filter all ${TEAM_UPS.length} active Marvel Rivals Team-Ups by anchor hero, role, tier, and season. Patch-aware.`}
+>
+  <section class="container-wide pt-10 pb-6">
+    <div class="text-xs uppercase tracking-widest text-[color:var(--fg-dim)] mb-3">
+      Tools / <span class="text-[color:var(--fg-muted)]">Team-Up Explorer</span>
+    </div>
+    <h1 class="display-tight text-4xl md:text-6xl uppercase tracking-tight">
+      Team-Up <span class="text-[color:var(--accent)]">Explorer</span>
+    </h1>
+    <p class="mt-3 text-lg text-[color:var(--fg-muted)] max-w-3xl leading-relaxed">
+      All active Marvel Rivals Team-Ups in one filterable grid. Lock in anchor hero, role, or tier — find the synergy that wins your queue.
+    </p>
+  </section>
+
+  <section class="container-wide pb-16">
+    <TeamUpExplorer client:load teamUps={TEAM_UPS} heroes={HEROES} />
+  </section>
+
+  <section class="container-wide pb-16">
+    <div class="card p-6 max-w-3xl">
+      <h2 class="display text-xl uppercase tracking-tight mb-3">How Team-Ups work</h2>
+      <p class="text-[color:var(--fg-muted)] leading-relaxed">
+        A Team-Up activates when its <strong class="text-[color:var(--fg)]">anchor</strong> hero is on your team
+        alongside one or more <strong class="text-[color:var(--fg)]">secondaries</strong>. The anchor typically gets a stat
+        buff; secondaries gain a new active or passive ability — a unibeam charge, a phase-warp, a fire-tornado,
+        a respawn pact. Drafting Team-Ups before counters is the single biggest move that separates Diamond
+        from Grandmaster in Season 7.5+.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
