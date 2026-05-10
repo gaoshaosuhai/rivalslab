@@ -1,5 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import EntitySchema from '@/components/EntitySchema.astro';
+import SectionHero from '@/components/SectionHero.astro';
 import { SITE_NAME, CONTACT_EMAIL } from '@/consts';
 ---
 
@@ -7,8 +9,30 @@ import { SITE_NAME, CONTACT_EMAIL } from '@/consts';
   title="About"
   description={`About ${SITE_NAME} — independent fan tool for Marvel Rivals.`}
 >
+  <EntitySchema
+    articleType="WebPage"
+    title={`About ${SITE_NAME}`}
+    description={`About ${SITE_NAME} — independent fan tool for Marvel Rivals. Editorial standards, contact, trademark notice.`}
+    path="/about/"
+    breadcrumbs={[
+      { name: 'Home', path: '/' },
+      { name: 'About' },
+    ]}
+  />
+  <SectionHero
+    image="/images/ss-09.jpg"
+    alt="Marvel Rivals action — RivalsLab editorial mission"
+    focus="center"
+    tint="panel"
+    variant="compact"
+  >
+    <h1 class="display-tight text-4xl md:text-5xl uppercase tracking-tight [text-shadow:0_2px_25px_rgba(0,0,0,0.55)]">About {SITE_NAME}</h1>
+    <p class="mt-3 text-lg text-[color:var(--fg)] [text-shadow:0_1px_15px_rgba(0,0,0,0.6)]">
+      Independent fan tool. Built solo + AI for SEO-driven ad revenue.
+    </p>
+  </SectionHero>
   <section class="container-narrow py-12 md:py-16 max-w-3xl">
-    <h1 class="display-tight text-4xl md:text-5xl uppercase tracking-tight">About {SITE_NAME}</h1>
+    <h2 class="display text-2xl uppercase tracking-tight">{SITE_NAME}</h2>
 
     <h2 class="display text-2xl uppercase tracking-tight mt-10">What this is</h2>
     <p class="mt-3 text-[color:var(--fg-muted)] leading-relaxed">

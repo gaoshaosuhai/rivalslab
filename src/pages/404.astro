@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import SectionHero from '@/components/SectionHero.astro';
 import { SITE_NAME } from '@/consts';
 ---
 
@@ -8,13 +9,19 @@ import { SITE_NAME } from '@/consts';
   description="That page doesn't exist."
   noindex={true}
 >
-  <section class="container-narrow py-20 md:py-32 text-center">
-    <div class="display text-7xl md:text-9xl text-[color:var(--accent)] tracking-tight">404</div>
-    <h1 class="mt-4 display-tight text-3xl md:text-4xl uppercase tracking-tight">Hero not found</h1>
-    <p class="mt-3 text-[color:var(--fg-muted)] leading-relaxed max-w-md mx-auto">
+  <SectionHero
+    image="/images/ss-10.jpg"
+    alt="Marvel Rivals — wrong corridor"
+    focus="center"
+    tint="warn"
+    variant="compact"
+  >
+    <div class="display text-7xl md:text-9xl text-[color:var(--accent)] tracking-tight [text-shadow:0_4px_30px_rgba(0,0,0,0.6)]">404</div>
+    <h1 class="mt-4 display-tight text-3xl md:text-4xl uppercase tracking-tight [text-shadow:0_2px_25px_rgba(0,0,0,0.55)]">Hero not found</h1>
+    <p class="mt-3 text-[color:var(--fg)] leading-relaxed max-w-md [text-shadow:0_1px_15px_rgba(0,0,0,0.6)]">
       That page doesn't exist on {SITE_NAME}. Maybe it moved with a patch, maybe it never shipped.
     </p>
-    <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+    <div class="mt-6 flex flex-wrap items-center gap-3">
       <a
         href="/"
         class="inline-flex items-center gap-2 px-4 py-2.5 rounded-md bg-[color:var(--accent)] text-[color:var(--color-panel-900)] font-semibold hover:bg-[color:var(--accent-soft)] transition-colors"
@@ -23,10 +30,10 @@ import { SITE_NAME } from '@/consts';
       </a>
       <a
         href="/team-ups/"
-        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-md border border-[color:var(--border)] text-[color:var(--fg)] hover:border-[color:color-mix(in_oklab,var(--accent)_60%,transparent)] transition-colors"
+        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-md border border-[color:var(--accent)] text-[color:var(--fg)] hover:bg-[color:color-mix(in_oklab,var(--accent)_18%,transparent)] transition-colors backdrop-blur-sm"
       >
         Team-Up Explorer
       </a>
     </div>
-  </section>
+  </SectionHero>
 </BaseLayout>

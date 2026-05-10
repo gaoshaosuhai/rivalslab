@@ -1,5 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import EntitySchema from '@/components/EntitySchema.astro';
+import SectionHero from '@/components/SectionHero.astro';
 import { HEROES, ROLES_ORDER, roleClass } from '@/data/heroes';
 import type { Hero } from '@/data/heroes';
 
@@ -20,17 +22,33 @@ const byTier = TIERS.map((t) => ({
   title="Marvel Rivals tier list — current snapshot"
   description="Marvel Rivals hero tier list grouped by S / A / B / C. Snapshot updated each patch."
 >
-  <section class="container-wide pt-10 pb-6">
-    <div class="text-xs uppercase tracking-widest text-[color:var(--fg-dim)] mb-3">
-      Tools / <span class="text-[color:var(--fg-muted)]">Tier list</span>
+  <EntitySchema
+    articleType="Article"
+    title="Marvel Rivals tier list — current S7.5 snapshot"
+    description="Marvel Rivals hero tier list grouped by S / A / B / C. Snapshot updated each patch."
+    path="/tier-list/"
+    breadcrumbs={[
+      { name: 'Home', path: '/' },
+      { name: 'Tier list' },
+    ]}
+  />
+  <SectionHero
+    image="/images/ss-07.jpg"
+    alt="Marvel Rivals roster lineup — tier list snapshot"
+    focus="center"
+    tint="cosmic"
+    variant="compact"
+  >
+    <div class="text-xs uppercase tracking-widest text-[color:var(--fg-muted)] mb-3 [text-shadow:0_1px_8px_rgba(0,0,0,0.6)]">
+      Tools / <span class="text-[color:var(--fg)]">Tier list</span>
     </div>
-    <h1 class="display-tight text-4xl md:text-6xl uppercase tracking-tight">
+    <h1 class="display-tight text-4xl md:text-6xl uppercase tracking-tight [text-shadow:0_2px_25px_rgba(0,0,0,0.55)]">
       Tier <span class="text-[color:var(--accent)]">List</span>
     </h1>
-    <p class="mt-3 text-lg text-[color:var(--fg-muted)] max-w-3xl leading-relaxed">
+    <p class="mt-3 text-lg text-[color:var(--fg)] max-w-3xl leading-relaxed [text-shadow:0_1px_15px_rgba(0,0,0,0.6)]">
       Current Marvel Rivals hero tier snapshot. Editorial — refined each patch. Tier alone isn't a draft strategy; pair with the <a href="/team-ups/" class="text-[color:var(--accent)] hover:text-[color:var(--accent-soft)]">Team-Up Explorer</a> before locking your queue.
     </p>
-  </section>
+  </SectionHero>
 
   <section class="container-wide pb-16 space-y-6">
     {

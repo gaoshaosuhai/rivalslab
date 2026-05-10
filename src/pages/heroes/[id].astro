@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { HEROES, type Hero, roleClass } from '@/data/heroes';
+import EntitySchema from '@/components/EntitySchema.astro';
+import { HEROES, type Hero, roleClass, heroPortraitUrl } from '@/data/heroes';
 import { teamUpsForHero } from '@/data/team-ups';
 import { MAPS } from '@/data/maps';
 import HeroGlyph from '@/components/HeroGlyph.astro';
@@ -14,10 +15,31 @@ const { hero } = Astro.props;
 
 const teamUps = teamUpsForHero(hero.id);
 const heroMaps = MAPS.filter((m) => m.topHeroes.includes(hero.id));
+const relatedHeroes = HEROES
+  .filter((h) => h.role === hero.role && h.id !== hero.id)
+  .sort((a, b) => {
+    const tierOrder: Record<string, number> = { S: 0, A: 1, B: 2, C: 3 };
+    return (tierOrder[a.tier] - tierOrder[b.tier]) || a.name.localeCompare(b.name);
+  })
+  .slice(0, 6);
+
 const description = `${hero.name} — ${hero.role} guide for Marvel Rivals. ${hero.blurb}`;
+const portrait = heroPortraitUrl(hero.id);
 ---
 
-<BaseLayout title={`${hero.name} — ${hero.role} guide`} description={description}>
+<BaseLayout title={`${hero.name} — ${hero.role} guide`} description={description} image={portrait ?? '/og-default.svg'}>
+  <EntitySchema
+    articleType="Article"
+    title={`${hero.name} — ${hero.role} guide for Marvel Rivals`}
+    description={description}
+    path={`/heroes/${hero.id}/`}
+    image={portrait ?? '/og-default.svg'}
+    breadcrumbs={[
+      { name: 'Home', path: '/' },
+      { name: 'Heroes', path: '/heroes/' },
+      { name: hero.name },
+    ]}
+  />
   <article class="container-narrow py-10 md:py-14">
     <div class="text-xs uppercase tracking-widest text-[color:var(--fg-dim)] mb-3">
       <a href="/heroes/" class="hover:text-[color:var(--accent)]">Heroes</a> /
@@ -87,5 +109,29 @@ const description = `${hero.name} — ${hero.role} guide for Marvel Rivals. ${he
         {' '}in the current snapshot. {teamUps.length > 0 && `${hero.name} participates in ${teamUps.length} active Team-Up${teamUps.length === 1 ? '' : 's'} — that's where the carry potential lives.`}
       </p>
     </section>
+
+    {relatedHeroes.length > 0 && (
+      <section class="mt-10">
+        <h2 class="display text-2xl uppercase tracking-tight mb-4">Other {hero.role}s</h2>
+        <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
+          {relatedHeroes.map((h) => (
+            <a href={`/heroes/${h.id}/`} class="card p-3 flex gap-3 hover:border-[color:color-mix(in_oklab,var(--accent)_45%,transparent)] transition-colors">
+              <HeroGlyph hero={h} size={48} />
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class={`chip ${h.tier === 'S' ? 'chip-warn' : 'chip-accent'}`}>{h.tier}</span>
+                  <span class="text-[10px] uppercase tracking-widest text-[color:var(--fg-dim)]">{h.difficulty}</span>
+                </div>
+                <div class="font-medium text-[color:var(--fg)] leading-tight">{h.name}</div>
+                <p class="text-xs text-[color:var(--fg-muted)] mt-1 line-clamp-2 leading-snug">{h.blurb}</p>
+              </div>
+            </a>
+          ))}
+        </div>
+        <p class="mt-4 text-sm text-[color:var(--fg-muted)]">
+          Browse the <a href="/heroes/" class="text-[color:var(--accent)] hover:text-[color:var(--accent-soft)]">full {hero.role} roster →</a>
+        </p>
+      </section>
+    )}
   </article>
 </BaseLayout>

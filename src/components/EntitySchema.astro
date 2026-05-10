@@ -1,0 +1,73 @@
+---
+import { SITE_NAME, SITE_URL, SNAPSHOT_DATE } from '@/consts';
+
+interface Crumb {
+  /** Display name. */
+  name: string;
+  /** Path relative to SITE_URL (e.g. "/heroes/"). Optional for the last crumb. */
+  path?: string;
+}
+
+interface Props {
+  /** Schema.org entity type for the page-level Article. */
+  articleType?: 'Article' | 'NewsArticle' | 'TechArticle' | 'CollectionPage' | 'WebPage';
+  /** Page H1 / canonical title (for the Article schema). */
+  title: string;
+  /** Short description for the Article schema. */
+  description: string;
+  /** Path of THIS page relative to SITE_URL (e.g. "/heroes/hulk/"). */
+  path: string;
+  /** Breadcrumb trail. The last crumb is the current page; its path is optional. */
+  breadcrumbs: Crumb[];
+  /** ISO yyyy-mm-dd this entity was last reviewed. Falls back to SNAPSHOT_DATE. */
+  dateModified?: string;
+  /** Optional image URL — defaults to /og-default.svg. */
+  image?: string;
+}
+
+const {
+  articleType = 'Article',
+  title,
+  description,
+  path,
+  breadcrumbs,
+  dateModified = SNAPSHOT_DATE,
+  image = '/og-default.svg',
+} = Astro.props;
+
+const canonical = SITE_URL + path;
+const fullImage = image.startsWith('http') ? image : SITE_URL + image;
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: breadcrumbs.map((c, idx) => ({
+    '@type': 'ListItem',
+    position: idx + 1,
+    name: c.name,
+    ...(c.path ? { item: SITE_URL + c.path } : {}),
+  })),
+};
+
+const articleSchema: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': articleType,
+  headline: title,
+  description,
+  url: canonical,
+  image: fullImage,
+  datePublished: SNAPSHOT_DATE,
+  dateModified,
+  author: { '@type': 'Organization', name: SITE_NAME, url: SITE_URL },
+  publisher: {
+    '@type': 'Organization',
+    name: SITE_NAME,
+    url: SITE_URL,
+    logo: { '@type': 'ImageObject', url: SITE_URL + '/favicon.svg' },
+  },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
+};
+---
+
+<script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumbSchema)} />
+<script type="application/ld+json" is:inline set:html={JSON.stringify(articleSchema)} />

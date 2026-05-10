@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import SectionHero from '@/components/SectionHero.astro';
+import EntitySchema from '@/components/EntitySchema.astro';
 import { HEROES, ROLES_ORDER, heroesByRole, roleClass } from '@/data/heroes';
 import HeroGlyph from '@/components/HeroGlyph.astro';
 ---
@@ -9,6 +10,16 @@ import HeroGlyph from '@/components/HeroGlyph.astro';
   title="All Marvel Rivals heroes — guide & tier"
   description={`Browse all ${HEROES.length} Marvel Rivals heroes by role. Counters, team-ups, best maps, current tier.`}
 >
+  <EntitySchema
+    articleType="CollectionPage"
+    title="All Marvel Rivals heroes"
+    description={`Browse all ${HEROES.length} Marvel Rivals heroes by role. Counters, team-ups, best maps, current tier.`}
+    path="/heroes/"
+    breadcrumbs={[
+      { name: 'Home', path: '/' },
+      { name: 'Heroes' },
+    ]}
+  />
   <SectionHero
     image="/images/ss-03.jpg"
     alt="Marvel Rivals roster — all 49 heroes"

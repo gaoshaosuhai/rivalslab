@@ -1,7 +1,8 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import EntitySchema from '@/components/EntitySchema.astro';
 import { TEAM_UPS, type TeamUp } from '@/data/team-ups';
-import { heroById, roleClass } from '@/data/heroes';
+import { heroById, roleClass, heroPortraitUrl } from '@/data/heroes';
 import { mapById } from '@/data/maps';
 import HeroGlyph from '@/components/HeroGlyph.astro';
 
@@ -15,12 +16,32 @@ const { teamUp } = Astro.props;
 const anchor = heroById(teamUp.anchor);
 const secondaries = teamUp.secondaries.map((id) => heroById(id)).filter(Boolean);
 const bestMaps = (teamUp.bestMaps ?? []).map((id) => mapById(id)).filter(Boolean);
+const relatedTeamUps = TEAM_UPS
+  .filter((t) => t.id !== teamUp.id && (
+    t.anchor === teamUp.anchor ||
+    teamUp.secondaries.some((s) => t.anchor === s || t.secondaries.includes(s)) ||
+    t.tier === teamUp.tier
+  ))
+  .slice(0, 4);
 
 const tierWord = { S: 'meta-defining', A: 'strong', B: 'situational', C: 'niche' }[teamUp.tier];
 const description = `${teamUp.name} — ${anchor?.name} anchor team-up in Marvel Rivals. ${teamUp.ability}`;
+const ogImage = anchor ? (heroPortraitUrl(anchor.id) ?? '/og-default.svg') : '/og-default.svg';
 ---
 
-<BaseLayout title={`${teamUp.name} — Team-Up guide`} description={description}>
+<BaseLayout title={`${teamUp.name} — Team-Up guide`} description={description} image={ogImage}>
+  <EntitySchema
+    articleType="Article"
+    title={`${teamUp.name} — Marvel Rivals Team-Up guide`}
+    description={description}
+    path={`/team-ups/${teamUp.id}/`}
+    image={ogImage}
+    breadcrumbs={[
+      { name: 'Home', path: '/' },
+      { name: 'Team-Ups', path: '/team-ups/' },
+      { name: teamUp.name },
+    ]}
+  />
   <article class="container-narrow py-10 md:py-14">
     <div class="text-xs uppercase tracking-widest text-[color:var(--fg-dim)] mb-3">
       <a href="/team-ups/" class="hover:text-[color:var(--accent)]">Team-Ups</a> /
@@ -88,5 +109,32 @@ const description = `${teamUp.name} — ${anchor?.name} anchor team-up in Marvel
         is committing to {anchor?.role.toLowerCase()} sustain — without {anchor?.name}, the synergy doesn't activate.
       </p>
     </section>
+
+    {relatedTeamUps.length > 0 && (
+      <section class="mt-10">
+        <h2 class="display text-2xl uppercase tracking-tight mb-4">Related Team-Ups</h2>
+        <div class="grid sm:grid-cols-2 gap-3">
+          {relatedTeamUps.map((t) => {
+            const ta = heroById(t.anchor);
+            return (
+              <a href={`/team-ups/${t.id}/`} class="card p-4 hover:border-[color:color-mix(in_oklab,var(--accent)_45%,transparent)] transition-colors">
+                <div class="flex items-start gap-2 mb-2">
+                  <span class={`chip ${t.tier === 'S' ? 'chip-warn' : 'chip-accent'}`}>{t.tier}</span>
+                  <span class="text-xs text-[color:var(--fg-dim)] uppercase tracking-widest">{t.introduced}</span>
+                </div>
+                <div class="display text-lg uppercase tracking-tight text-[color:var(--fg)]">{t.name}</div>
+                <div class="text-xs text-[color:var(--fg-dim)] mt-1">
+                  <span class="text-[color:var(--accent)]">{ta?.name ?? t.anchor}</span>
+                </div>
+                <p class="text-sm text-[color:var(--fg-muted)] mt-2 line-clamp-2">{t.ability}</p>
+              </a>
+            );
+          })}
+        </div>
+        <p class="mt-4 text-sm text-[color:var(--fg-muted)]">
+          Browse all <a href="/team-ups/" class="text-[color:var(--accent)] hover:text-[color:var(--accent-soft)]">{TEAM_UPS.length} active Team-Ups →</a>
+        </p>
+      </section>
+    )}
   </article>
 </BaseLayout>

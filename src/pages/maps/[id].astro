@@ -1,5 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import EntitySchema from '@/components/EntitySchema.astro';
+import HeroGlyph from '@/components/HeroGlyph.astro';
 import { MAPS, type MarvelMap } from '@/data/maps';
 import { heroById, roleClass } from '@/data/heroes';
 import { TEAM_UPS } from '@/data/team-ups';
@@ -13,27 +15,71 @@ const { map } = Astro.props;
 
 const topHeroes = map.topHeroes.map((id) => heroById(id)).filter(Boolean);
 const teamUpsForMap = TEAM_UPS.filter((tu) => tu.bestMaps?.includes(map.id));
+const relatedMaps = MAPS.filter((m) => m.id !== map.id && m.mode === map.mode).slice(0, 4);
+
+// Rotate through 10 atmospheric screenshots (ss-01..ss-10) so each map gets a
+// distinct image. Uses a deterministic hash of the map id so the same map
+// always picks the same image across rebuilds.
+const mapIdx = MAPS.findIndex((m) => m.id === map.id);
+const ssNum = (mapIdx % 10) + 1;
+const screenshot = `/images/ss-${String(ssNum).padStart(2, '0')}.jpg`;
+
+const tintByMode: Record<string, 'panel' | 'accent' | 'cosmic' | 'warn'> = {
+  Convoy: 'accent',
+  Domination: 'warn',
+  Convergence: 'cosmic',
+};
+
 const description = `Best heroes and team-ups for ${map.name} — Marvel Rivals ${map.mode} map. ${map.notes}`;
 ---
 
-<BaseLayout title={`${map.name} — best heroes & team-ups`} description={description}>
+<BaseLayout title={`${map.name} — best heroes & team-ups`} description={description} image={screenshot}>
+  <EntitySchema
+    articleType="Article"
+    title={`${map.name} — best heroes & team-ups (Marvel Rivals)`}
+    description={description}
+    path={`/maps/${map.id}/`}
+    image={screenshot}
+    breadcrumbs={[
+      { name: 'Home', path: '/' },
+      { name: 'Maps', path: '/maps/' },
+      { name: map.name },
+    ]}
+  />
+
+  {/* Atmospheric header with screenshot. */}
+  <section class="relative min-h-[36vh] md:min-h-[44vh] overflow-hidden border-b border-[color:var(--border)]">
+    <img
+      src={screenshot}
+      alt={`Marvel Rivals gameplay — ${map.mode} mode atmosphere`}
+      class="absolute inset-0 w-full h-full object-cover"
+      style="object-position: 50% 50%;"
+      loading="eager"
+      fetchpriority="high"
+      decoding="async"
+    />
+    <div class="absolute inset-0" aria-hidden="true" style={`background: linear-gradient(to right, rgba(11,11,15,0.95) 0%, rgba(11,11,15,0.82) 30%, rgba(11,11,15,0.5) 70%, rgba(255,214,10,0.12) 100%), linear-gradient(to top, rgba(11,11,15,0.6) 0%, transparent 100%);`} />
+    <div class="relative h-full container-narrow flex items-end md:items-center py-14 md:py-20">
+      <div class="max-w-3xl">
+        <div class="text-xs uppercase tracking-widest text-[color:var(--fg-muted)] mb-3 [text-shadow:0_1px_8px_rgba(0,0,0,0.6)]">
+          <a href="/maps/" class="hover:text-[color:var(--accent)]">Maps</a> /
+          <span class="text-[color:var(--fg)]">{map.name}</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 mb-4">
+          <span class="chip chip-accent">{map.mode}</span>
+          {map.favorsRoles.map((r) => (
+            <span class={`chip ${roleClass(r as any)}`} style="border-color:currentColor;color:currentColor;background:color-mix(in oklab, currentColor 14%, transparent)">
+              Favors {r}
+            </span>
+          ))}
+        </div>
+        <h1 class="display-tight text-5xl md:text-6xl uppercase tracking-tight [text-shadow:0_2px_25px_rgba(0,0,0,0.55)]">{map.name}</h1>
+        <p class="mt-3 text-lg text-[color:var(--fg)] [text-shadow:0_1px_15px_rgba(0,0,0,0.6)]">{map.flavor}</p>
+      </div>
+    </div>
+  </section>
+
   <article class="container-narrow py-10 md:py-14">
-    <div class="text-xs uppercase tracking-widest text-[color:var(--fg-dim)] mb-3">
-      <a href="/maps/" class="hover:text-[color:var(--accent)]">Maps</a> /
-      <span class="text-[color:var(--fg-muted)]">{map.name}</span>
-    </div>
-
-    <div class="flex flex-wrap items-center gap-2 mb-4">
-      <span class="chip chip-accent">{map.mode}</span>
-      {map.favorsRoles.map((r) => (
-        <span class={`chip ${roleClass(r as any)}`} style="border-color:currentColor;color:currentColor;background:color-mix(in oklab, currentColor 14%, transparent)">
-          Favors {r}
-        </span>
-      ))}
-    </div>
-
-    <h1 class="display-tight text-5xl md:text-6xl uppercase tracking-tight">{map.name}</h1>
-    <p class="mt-3 text-lg text-[color:var(--fg-muted)]">{map.flavor}</p>
 
     <section class="mt-8 card-panel p-6">
       <h2 class="display text-xl uppercase tracking-tight mb-2">Pick patterns</h2>
@@ -67,6 +113,21 @@ const description = `Best heroes and team-ups for ${map.name} — Marvel Rivals 
               <span class={`chip ${tu.tier === 'S' ? 'chip-warn' : 'chip-accent'}`}>{tu.tier}</span>
               <div class="display text-xl uppercase mt-2 text-[color:var(--fg)]">{tu.name}</div>
               <p class="text-sm text-[color:var(--fg-muted)] mt-2">{tu.ability}</p>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    {relatedMaps.length > 0 && (
+      <section class="mt-10">
+        <h2 class="display text-2xl uppercase tracking-tight mb-4">Other {map.mode} maps</h2>
+        <div class="grid sm:grid-cols-2 gap-3">
+          {relatedMaps.map((m) => (
+            <a href={`/maps/${m.id}/`} class="card-panel p-4 hover:border-[color:color-mix(in_oklab,var(--accent)_45%,transparent)] transition-colors">
+              <span class="chip chip-accent">{m.mode}</span>
+              <div class="display text-lg uppercase mt-2 text-[color:var(--fg)]">{m.name}</div>
+              <p class="text-sm text-[color:var(--fg-muted)] mt-2 line-clamp-2">{m.flavor}</p>
             </a>
           ))}
         </div>

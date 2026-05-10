@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import SectionHero from '@/components/SectionHero.astro';
+import EntitySchema from '@/components/EntitySchema.astro';
 import { TEAM_UPS } from '@/data/team-ups';
 import { HEROES } from '@/data/heroes';
 import TeamUpExplorer from '@/components/islands/TeamUpExplorer';
@@ -10,6 +11,16 @@ import TeamUpExplorer from '@/components/islands/TeamUpExplorer';
   title="Team-Up Explorer — Marvel Rivals synergy guide"
   description={`Filter all ${TEAM_UPS.length} active Marvel Rivals Team-Ups by anchor hero, role, tier, and season. Patch-aware.`}
 >
+  <EntitySchema
+    articleType="CollectionPage"
+    title="Marvel Rivals Team-Up Explorer"
+    description={`Filter all ${TEAM_UPS.length} active Marvel Rivals Team-Ups by anchor hero, role, tier, and season. Patch-aware.`}
+    path="/team-ups/"
+    breadcrumbs={[
+      { name: 'Home', path: '/' },
+      { name: 'Team-Ups' },
+    ]}
+  />
   <SectionHero
     image="/images/ss-02.jpg"
     alt="Marvel Rivals heroes mid-team-up"

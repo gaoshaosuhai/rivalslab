@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import AdSlot from '@/components/AdSlot.astro';
+import EntitySchema from '@/components/EntitySchema.astro';
 import { SNAPSHOT_DATE, TARGET_VERSION_NAME } from '@/consts';
 ---
 
@@ -8,6 +9,17 @@ import { SNAPSHOT_DATE, TARGET_VERSION_NAME } from '@/consts';
   title="New player guide — Marvel Rivals (S7.5)"
   description="Practical Marvel Rivals beginner guide. Pick your role, your first hero, what to ignore for your first 20 matches, and how to avoid the Bronze-trap mistakes."
 >
+  <EntitySchema
+    articleType="Article"
+    title="New player guide — Marvel Rivals (S7.5)"
+    description="Practical Marvel Rivals beginner guide. Pick your role, your first hero, what to ignore for your first 20 matches, and how to avoid the Bronze-trap mistakes."
+    path="/guides/getting-started/"
+    breadcrumbs={[
+      { name: 'Home', path: '/' },
+      { name: 'Guides', path: '/guides/' },
+      { name: 'Getting started' },
+    ]}
+  />
   <article class="container-narrow py-10 md:py-14 max-w-3xl">
     <div class="text-xs uppercase tracking-widest text-[color:var(--fg-dim)] mb-3">
       <a href="/guides/" class="hover:text-[color:var(--accent)]">Guides</a> /
